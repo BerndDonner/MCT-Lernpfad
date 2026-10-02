@@ -1,0 +1,270 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="720" viewBox="0 0 1200 720">
+  <title>Git Commit Snapshot und Diff Viewer</title>
+  <desc>Linksklick zeigt Snapshot; Shift+Linksklick auf zweiten Commit zeigt Dateidiff.</desc>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --ink: #1f2328;
+      --muted: #6e7781;
+      --line: #8c959f;
+      --panel: #f6f8fa;
+      --primary: #0969da;
+      --secondary: #8250df;
+      --added: #1a7f37;
+      --modified: #9a6700;
+      --deleted: #cf222e;
+      --folder: #57606a;
+    }
+    text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; fill: var(--ink); }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .small { font-size: 14px; }
+    .label { font-size: 16px; }
+    .title { font-size: 24px; font-weight: 700; }
+    .subtitle { font-size: 16px; fill: var(--muted); }
+    .commit-line { stroke: var(--line); stroke-width: 4; fill: none; }
+    .commit { cursor: pointer; }
+    .commit circle { fill: var(--bg); stroke: var(--ink); stroke-width: 3; }
+    .commit text { font-size: 18px; font-weight: 700; pointer-events: none; }
+    .commit.primary circle { stroke: var(--primary); stroke-width: 6; }
+    .commit.secondary circle { stroke: var(--secondary); stroke-width: 6; }
+    .branch-label { font-size: 17px; font-weight: 700; }
+    .panel { fill: var(--panel); stroke: #d0d7de; stroke-width: 2; }
+    .panel-rule { stroke: #d0d7de; stroke-width: 1.5; }
+    .tree-folder { fill: var(--folder); font-weight: 700; }
+    .tree-file { fill: var(--ink); }
+    .status-added { fill: var(--added); font-weight: 700; }
+    .status-modified { fill: var(--modified); font-weight: 700; }
+    .status-deleted { fill: var(--deleted); font-weight: 700; }
+    .legend-box { fill: #ffffff; stroke: #d0d7de; stroke-width: 1.5; }
+  </style>
+
+  <rect width="1200" height="720" fill="#ffffff"/>
+
+  <text x="50" y="48" class="title">Git: Commit-Snapshot und Dateidiff</text>
+  <text x="50" y="75" class="subtitle">Linksklick: Snapshot · Shift+Linksklick: zweiten Commit für Diff auswählen</text>
+
+  <g id="graph" transform="translate(55,115)">
+    <text x="0" y="0" class="label" font-weight="700">Commit-Graph</text>
+
+    <path d="M 80 110 L 250 110 L 420 110" class="commit-line"/>
+    <path d="M 80 110 C 130 110, 120 265, 250 265 L 420 265" class="commit-line"/>
+
+    <g id="commit-A" class="commit" data-commit="A" transform="translate(80,110)">
+      <circle r="23"/><text text-anchor="middle" dominant-baseline="central">A</text>
+    </g>
+    <g id="commit-B" class="commit" data-commit="B" transform="translate(250,110)">
+      <circle r="23"/><text text-anchor="middle" dominant-baseline="central">B</text>
+    </g>
+    <g id="commit-C" class="commit" data-commit="C" transform="translate(420,110)">
+      <circle r="23"/><text text-anchor="middle" dominant-baseline="central">C</text>
+    </g>
+    <g id="commit-D" class="commit" data-commit="D" transform="translate(250,265)">
+      <circle r="23"/><text text-anchor="middle" dominant-baseline="central">D</text>
+    </g>
+    <g id="commit-E" class="commit" data-commit="E" transform="translate(420,265)">
+      <circle r="23"/><text text-anchor="middle" dominant-baseline="central">E</text>
+    </g>
+
+    <text x="465" y="116" class="branch-label">master</text>
+    <text x="465" y="271" class="branch-label">wurzelsepp</text>
+
+    <g transform="translate(0,350)">
+      <rect x="0" y="0" width="500" height="145" rx="8" class="legend-box"/>
+      <text x="18" y="30" class="label" font-weight="700">Bedienung</text>
+      <text x="18" y="60" class="small">• Linksklick auf einen Commit → Snapshot dieses Commits</text>
+      <text x="18" y="88" class="small">• Shift+Linksklick auf zweiten Commit → Dateidiff</text>
+      <text x="18" y="116" class="small">• Normaler Klick → neue Snapshot-Auswahl</text>
+    </g>
+  </g>
+
+  <g id="panel" transform="translate(610,112)">
+    <rect x="0" y="0" width="535" height="555" rx="14" class="panel"/>
+    <text id="panelTitle" x="28" y="45" class="title">Snapshot A</text>
+    <text id="panelSubtitle" x="28" y="72" class="subtitle">Dateistand dieses Commits</text>
+    <line x1="24" y1="92" x2="510" y2="92" class="panel-rule"/>
+    <g id="panelContent" transform="translate(30,125)"></g>
+  </g>
+
+  <script><![CDATA[
+    const snapshots = {
+      A: {
+        "_config/launch.json": "launch-v1",
+        "donner/skript.pdf": "skript-v1",
+        "README.md": "readme-v1"
+      },
+      B: {
+        "_config/launch.json": "launch-v1",
+        "donner/00_ascii_tabelle/00_ascii_tabelle.ino": "ascii-v1",
+        "README.md": "readme-v1"
+      },
+      C: {
+        "_config/launch.json": "launch-v1",
+        "donner/00_ascii_tabelle/00_ascii_tabelle.ino": "ascii-v2",
+        "donner/01_joystick/01_joystick.ino": "joystick-v1",
+        "README.md": "readme-v1"
+      },
+      D: {
+        "_config/launch.json": "launch-v1",
+        "donner/skript.pdf": "skript-v1",
+        "wurzelsepp/mitschrift.md": "mitschrift-v1",
+        "README.md": "readme-v1"
+      },
+      E: {
+        "_config/launch.json": "launch-v1",
+        "donner/skript.pdf": "skript-v1",
+        "donner/00_ascii_tabelle/00_ascii_tabelle.ino": "ascii-v1",
+        "wurzelsepp/mitschrift.md": "mitschrift-v1",
+        "README.md": "readme-v1"
+      }
+    };
+
+    let primary = "A";
+    let secondary = null;
+
+    const NS = "http://www.w3.org/2000/svg";
+    const panelContent = document.getElementById("panelContent");
+    const panelTitle = document.getElementById("panelTitle");
+    const panelSubtitle = document.getElementById("panelSubtitle");
+
+    function make(name, attrs = {}, text = null) {
+      const n = document.createElementNS(NS, name);
+      for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+      if (text !== null) n.textContent = text;
+      return n;
+    }
+
+    function clearPanel() {
+      while (panelContent.firstChild) panelContent.removeChild(panelContent.firstChild);
+    }
+
+    function updateCommitClasses() {
+      document.querySelectorAll(".commit").forEach(g => {
+        g.classList.remove("primary", "secondary");
+        const id = g.getAttribute("data-commit");
+        if (id === primary) g.classList.add("primary");
+        if (id === secondary) g.classList.add("secondary");
+      });
+    }
+
+    function buildTree(paths) {
+      const root = {};
+      for (const path of paths) {
+        const parts = path.split("/");
+        let node = root;
+        parts.forEach((part, i) => {
+          if (i === parts.length - 1) node[part] = null;
+          else {
+            if (!node[part]) node[part] = {};
+            node = node[part];
+          }
+        });
+      }
+      return root;
+    }
+
+    function flattenTree(tree, depth = 0, lines = []) {
+      const entries = Object.entries(tree);
+      entries.sort(([a,av],[b,bv]) => {
+        const ad = av !== null, bd = bv !== null;
+        if (ad !== bd) return ad ? -1 : 1;
+        return a.localeCompare(b);
+      });
+      for (const [name, value] of entries) {
+        lines.push({ name, depth, folder: value !== null });
+        if (value !== null) flattenTree(value, depth + 1, lines);
+      }
+      return lines;
+    }
+
+    function renderSnapshot(commit) {
+      clearPanel();
+      panelTitle.textContent = `Snapshot ${commit}`;
+      panelSubtitle.textContent = "Dateistand dieses Commits";
+
+      const lines = flattenTree(buildTree(Object.keys(snapshots[commit])));
+      let y = 0;
+      for (const line of lines) {
+        const prefix = line.folder ? "▾ " : "• ";
+        panelContent.appendChild(make("text", {
+          x: 22 * line.depth,
+          y: y,
+          class: line.folder ? "tree-folder mono" : "tree-file mono",
+          "font-size": "17"
+        }, prefix + line.name));
+        y += 30;
+      }
+    }
+
+    function computeDiff(a, b) {
+      const A = snapshots[a], B = snapshots[b];
+      const all = [...new Set([...Object.keys(A), ...Object.keys(B)])].sort();
+      const rows = [];
+      for (const path of all) {
+        if (!(path in A)) rows.push({ status: "A", path });
+        else if (!(path in B)) rows.push({ status: "D", path });
+        else if (A[path] !== B[path]) rows.push({ status: "M", path });
+      }
+      return rows;
+    }
+
+    function renderDiff(a, b) {
+      clearPanel();
+      panelTitle.textContent = `Diff ${a} → ${b}`;
+      panelSubtitle.textContent = "Unterschiede auf Dateiebene";
+
+      const legend = [
+        ["A", "neu", "status-added"],
+        ["M", "geändert", "status-modified"],
+        ["D", "gelöscht", "status-deleted"]
+      ];
+      let lx = 0;
+      for (const [code, label, cls] of legend) {
+        panelContent.appendChild(make("text", {x: lx, y: 0, class: `${cls} mono`, "font-size":"15"}, code));
+        panelContent.appendChild(make("text", {x: lx + 20, y: 0, class: "small"}, label));
+        lx += 115;
+      }
+
+      const diff = computeDiff(a, b);
+      let y = 45;
+      if (diff.length === 0) {
+        panelContent.appendChild(make("text", {x:0, y:y, class:"label"}, "Keine Dateiunterschiede."));
+        return;
+      }
+      for (const row of diff) {
+        const cls = row.status === "A" ? "status-added" :
+                    row.status === "M" ? "status-modified" : "status-deleted";
+        panelContent.appendChild(make("text", {
+          x: 0, y: y, class: `${cls} mono`, "font-size":"17"
+        }, row.status));
+        panelContent.appendChild(make("text", {
+          x: 34, y: y, class: "tree-file mono", "font-size":"16"
+        }, row.path));
+        y += 31;
+      }
+    }
+
+    function render() {
+      updateCommitClasses();
+      if (secondary) renderDiff(primary, secondary);
+      else renderSnapshot(primary);
+    }
+
+    document.querySelectorAll(".commit").forEach(g => {
+      g.addEventListener("click", evt => {
+        const commit = g.getAttribute("data-commit");
+        if (evt.shiftKey) {
+          if (commit === primary) secondary = null;
+          else secondary = commit;
+        } else {
+          primary = commit;
+          secondary = null;
+        }
+        render();
+      });
+    });
+
+    render();
+  ]]></script>
+</svg>

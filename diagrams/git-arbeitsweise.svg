@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="900"
+   height="430"
+   viewBox="0 0 900 430"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="git-arbeitsweise.svg"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="1.66"
+     inkscape:cx="296.38554"
+     inkscape:cy="214.75904"
+     inkscape:window-width="2048"
+     inkscape:window-height="1124"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer-base" />
+  <defs
+     id="defs1">
+    <rect
+       x="569.27711"
+       y="123.49398"
+       width="33.13253"
+       height="51.204819"
+       id="rect11" />
+    <marker
+       id="arrow-end"
+       viewBox="0 0 10 10"
+       refX="9"
+       refY="5"
+       markerWidth="7"
+       markerHeight="7"
+       orient="auto-start-reverse">
+      <path
+         d="M 0 0 L 10 5 L 0 10 z"
+         fill="#222"
+         id="path1" />
+    </marker>
+  </defs>
+  <g
+     inkscape:groupmode="layer"
+     inkscape:label="Basis UE 1"
+     id="layer-base">
+    <text
+       id="branch-heading"
+       x="105"
+       y="45"
+       text-anchor="middle"
+       font-family="sans-serif"
+       font-size="18"
+       font-weight="bold">Branch</text>
+    <text
+       id="folder-heading"
+       x="450"
+       y="45"
+       text-anchor="middle"
+       font-family="sans-serif"
+       font-size="18"
+       font-weight="bold">Verzeichnis</text>
+    <text
+       id="person-heading"
+       x="755"
+       y="45"
+       text-anchor="middle"
+       font-family="sans-serif"
+       font-size="18"
+       font-weight="bold">arbeitet dort</text>
+    <g
+       id="teacher-lane">
+      <rect
+         id="master-box"
+         x="30"
+         y="85"
+         width="150"
+         height="60"
+         rx="8"
+         fill="#fff"
+         stroke="#222"
+         stroke-width="2.5" />
+      <text
+         id="master-label"
+         x="105"
+         y="122"
+         text-anchor="middle"
+         font-family="monospace"
+         font-size="22">master</text>
+      <text
+         id="donner-folder-label"
+         x="450"
+         y="122"
+         text-anchor="middle"
+         font-family="monospace"
+         font-size="22px"
+         style="font-size:16px;text-align:start;text-anchor:start;white-space:pre;inline-size:399.182"
+         transform="translate(-118.07229,-55.421687)"
+         xml:space="preserve"><tspan
+           x="450"
+           y="122"
+           id="tspan4">_config
+</tspan><tspan
+           x="450"
+           y="142"
+           id="tspan5">donner
+</tspan><tspan
+           x="450"
+           y="162"
+           id="tspan6">flake.lock
+</tspan><tspan
+           x="450"
+           y="182"
+           id="tspan7">flake.nix
+</tspan><tspan
+           x="450"
+           y="202"
+           id="tspan8">README.md
+</tspan><tspan
+           x="450"
+           y="222"
+           id="tspan9">donner/</tspan></text>
+      <line
+         id="donner-to-teacher"
+         x1="580"
+         y1="115"
+         x2="655"
+         y2="115"
+         stroke="#222"
+         stroke-width="2.5"
+         marker-end="url(#arrow-end)" />
+      <text
+         id="teacher-label"
+         x="755"
+         y="122"
+         text-anchor="middle"
+         font-family="sans-serif"
+         font-size="21">Herr Donner</text>
+    </g>
+    <g
+       id="student-lane">
+      <rect
+         id="student-branch-box"
+         x="30"
+         y="285"
+         width="150"
+         height="60"
+         rx="8"
+         fill="#fff"
+         stroke="#222"
+         stroke-width="2.5" />
+      <text
+         id="student-branch-label"
+         x="105"
+         y="322"
+         text-anchor="middle"
+         font-family="monospace"
+         font-size="18">wurzelsepp</text>
+      <line
+         id="student-branch-to-folder"
+         x1="180"
+         y1="315"
+         x2="315"
+         y2="315"
+         stroke="#222"
+         stroke-width="2.5"
+         marker-end="url(#arrow-end)" />
+      <text
+         id="student-folder-label"
+         x="329.51807"
+         y="224.40964"
+         text-anchor="middle"
+         font-family="monospace"
+         font-size="22px"
+         style="font-size:16px;text-align:start;text-anchor:start"><tspan
+           sodipodi:role="line"
+           id="tspan1"
+           x="329.51807"
+           y="224.40964" /><tspan
+           sodipodi:role="line"
+           id="tspan2"
+           x="329.51807"
+           y="244.40964">_config</tspan><tspan
+           sodipodi:role="line"
+           x="329.51807"
+           y="264.40964"
+           id="tspan13">donner</tspan><tspan
+           sodipodi:role="line"
+           x="329.51807"
+           y="284.40964"
+           id="tspan14">flake.lock</tspan><tspan
+           sodipodi:role="line"
+           x="329.51807"
+           y="304.40964"
+           id="tspan15">flake.nix</tspan><tspan
+           sodipodi:role="line"
+           x="329.51807"
+           y="324.40964"
+           id="tspan16">README.md</tspan><tspan
+           sodipodi:role="line"
+           x="329.51807"
+           y="344.40964"
+           id="tspan17">donner/</tspan><tspan
+           sodipodi:role="line"
+           x="329.51807"
+           y="364.40964"
+           id="tspan18">wurzelsepp/</tspan></text>
+      <line
+         id="student-folder-to-person"
+         x1="580"
+         y1="315"
+         x2="655"
+         y2="315"
+         stroke="#222"
+         stroke-width="2.5"
+         marker-end="url(#arrow-end)" />
+      <text
+         id="student-label"
+         x="755"
+         y="322"
+         text-anchor="middle"
+         font-family="sans-serif"
+         font-size="20">Anton Wurzelsepp</text>
+    </g>
+    <g
+       id="update-path">
+      <line
+         id="upmaster-arrow"
+         x1="105"
+         y1="155"
+         x2="105"
+         y2="272"
+         stroke="#222"
+         stroke-width="2.5"
+         stroke-dasharray="7 6"
+         marker-end="url(#arrow-end)" />
+      <text
+         id="upmaster-label"
+         x="120"
+         y="220"
+         font-family="monospace"
+         font-size="17">git upmaster</text>
+    </g>
+    <g
+       id="copy-path">
+      <line
+         id="copy-arrow"
+         x1="450"
+         y1="160"
+         x2="450"
+         y2="267"
+         stroke="#222"
+         stroke-width="2.5"
+         stroke-dasharray="7 6"
+         marker-end="url(#arrow-end)" />
+      <text
+         id="copy-label"
+         x="465"
+         y="220"
+         font-family="sans-serif"
+         font-size="17">Datei kopieren</text>
+    </g>
+    <text
+       id="student-rule"
+       x="450"
+       y="392"
+       text-anchor="middle"
+       font-family="sans-serif"
+       font-size="18">
+      Schüler verändern keine Dateien in donner/
+    </text>
+    <text
+       xml:space="preserve"
+       id="text11"
+       style="fill:#000000;text-orientation:auto;writing-mode:lr-tb;direction:ltr;font-size:16px;white-space:pre;shape-inside:url(#rect11)" />
+  </g>
+</svg>
