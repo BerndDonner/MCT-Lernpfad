@@ -8,9 +8,9 @@
 
 ## Workflow
 
-> [!Achtung]
+
 > Herr Donner arbeitet nur auf dem Branch `master` im Verzeichnis `donner`.
-Schüler arbeiten nur im eigenen Branch und im eigenen Verzeichnis.
+> Schüler arbeiten nur im eigenen Branch und im eigenen Verzeichnis.
 
 # C++ allgemein
 
