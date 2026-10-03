@@ -2,15 +2,20 @@
 
 ## Commands / VS-Code-Schaltflächen
 
-`git commit` – staged Dateien mit einer sinnvollen Message committen  
-`git push` – Arbeit auf Forgejo veröffentlichen  
-`git upmaster` – neue Änderungen vom `master` holen
+|git-Befehl    |Beschreibung                                               |
+|:-------------|:----------------------------------------------------------|
+|`git commit`  |staged Dateien mit einer sinnvollen Message committen      |
+|`git push`    |Arbeit auf Forgejo veröffentlichen                         |
+|`git upmaster`|neue Änderungen vom `master` holen                         |
 
 ## Workflow
 
 
 > Herr Donner arbeitet nur auf dem Branch `master` im Verzeichnis `donner`.
-> Schüler arbeiten nur im eigenen Branch und im eigenen Verzeichnis.
+> Schüler:
+> - zu Beginn der Stunde `git upmaster`
+> - arbeiten nur im eigenen Branch und im eigenen Verzeichnis.
+> - am Ende der Stunde einen commit aller Änderungen und ein push
 
 # C++ allgemein
 
@@ -61,12 +66,45 @@ void loop() {
 ## Serielle Ausgabe
 
 ```cpp
-Serial.begin(115200);          // Initialisierung
-Serial.print("1. ");           // Ausgabe ohne neue Zeile
-Serial.println("Hallo Welt!"); // Ausgabe mit neuer Zeile
+void setup() {
+  Serial.begin(115200);          // Initialisierung
+  Serial.print("1. ");           // Ausgabe ohne neue Zeile
+  Serial.println("Hallo Welt!"); // Ausgabe mit neuer Zeile
+<!-- begin UE:1 add -->
+  Serial.println(43, HEX);       // Ausgabe von 43 als hex-Zahl - ohne führende Nullen
+  Serial.println(43, BIN);       // Ausgabe von 43 als bin-Zahl - ohne führende Nullen
+<!-- end -->
+}
 ```
 
-# Unser aktuelles Modell des Mikrocontrollers
+<!-- begin UE:1 add -->
+Für Ausgaben mit führenden Nullen gibt es:
+```cpp
+#include "donner.h"
+
+void setup() {
+  Serial.begin(115200);
+  printHex(43);      
+  printHexNice(43);  //mit Präfix und Gruppierung 
+  printBin(43);
+  printBinNice(43);  //mit Präfix und Gruppierung
+}
+```
+
+Alle vier Funktionen gibt es auch als Newline Variante mit ln (printlnHex)
+<!-- end -->
+
+# Mikrocontroller
+
+<!-- begin UE:1 add -->
+## Grundlagen
+
+- Ein Byte sind 8 Bits
+- Ein Mikrocontroller arbeitet nur mit Bytes nicht mit Bits
+- Im Speicher liegen keine Zahlen, Buchstaben oder Texte, sondern nur Bitmuster
+<!-- end -->
+
+## Modell des Microcontrollers
 
 ![CPU und Speicher](diagrams/microcontroller-modell.svg)
 
