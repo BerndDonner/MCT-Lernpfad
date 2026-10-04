@@ -64,6 +64,7 @@
         extraBuildInputs = with pkgs; [
           gtk4
           webkitgtk_6_0
+          gst_all_1.gst-plugins-base
         ];
 
         extraPackages = with pkgs; [
