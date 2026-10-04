@@ -8,8 +8,12 @@ const content = document.querySelector("#content");
 const statusEl = document.querySelector("#status");
 const reloadButton = document.querySelector("#reload");
 
-const params = new URLSearchParams(location.search);
-const documentPath = params.get("doc") || "mct-lernpfad.md";
+const host = window.viewerHost;
+if (!host) {
+  throw new Error("Kein Viewer-Host verfügbar.");
+}
+
+const documentPath = host.documentPath || "mct-lernpfad.md";
 
 function escapeHtml(s) {
   return s.replaceAll("&", "&amp;")
@@ -193,15 +197,32 @@ function renderMarkdown(md) {
   return out.join("\n");
 }
 
+function resolveEmbeddedResources(root) {
+  const attributes = [
+    ["img[src]", "src"],
+    ["object[data]", "data"],
+    ["iframe[src]", "src"],
+    ["source[src]", "src"]
+  ];
+
+  for (const [selector, attribute] of attributes) {
+    for (const element of root.querySelectorAll(selector)) {
+      const value = element.getAttribute(attribute);
+      if (!value || value.startsWith("#") ||
+          /^(?:data|blob|javascript):/i.test(value)) {
+        continue;
+      }
+      element.setAttribute(attribute, host.resolveUrl(value));
+    }
+  }
+}
+
 async function loadDocument() {
   statusEl.textContent = "Lade …";
   try {
-    const url = `${documentPath}?t=${Date.now()}`;
-    const response = await fetch(url, { cache: "no-store" });
-    if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-
-    const md = await response.text();
+    const md = await host.loadText(documentPath);
     content.innerHTML = renderMarkdown(md);
+    resolveEmbeddedResources(content);
     document.title = `MCT-Lernpfad – ${documentPath}`;
     statusEl.textContent = documentPath;
   } catch (err) {
@@ -211,5 +232,5 @@ async function loadDocument() {
   }
 }
 
-reloadButton.addEventListener("click", () => location.reload());
+reloadButton.addEventListener("click", loadDocument);
 loadDocument();
