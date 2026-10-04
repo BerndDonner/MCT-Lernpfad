@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg"
      width="1280" height="760" viewBox="0 0 1280 760">
   <title>Git Commit Snapshot und Dateidiff – Zweispaltig</title>
@@ -8,46 +9,27 @@
   </desc>
 
   <style>
-    :root {
-      --bg: #ffffff;
-      --ink: #1f2328;
-      --muted: #6e7781;
-      --line: #8c959f;
-      --panel: #f6f8fa;
-      --primary: #0969da;
-      --secondary: #8250df;
-      --added: #1a7f37;
-      --modified: #9a6700;
-      --deleted: #cf222e;
-      --folder: #57606a;
-      --panel-border: #d0d7de;
-    }
-    text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; fill: var(--ink); }
-    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
-    .small { font-size: 14px; }
-    .label { font-size: 16px; }
-    .title { font-size: 24px; font-weight: 700; }
-    .subtitle { font-size: 16px; fill: var(--muted); }
-    .commit-line { stroke: var(--line); stroke-width: 4; fill: none; }
+    @import url("diagram-theme.css");
+    .subtitle { font-size: 16px; fill: #656d76; }
+    .commit-line { stroke: #8c959f; stroke-width: 4; fill: none; }
     .commit { cursor: pointer; }
-    .commit circle { fill: var(--bg); stroke: var(--ink); stroke-width: 3; }
+    .commit circle { fill: #ffffff; stroke: #1f2328; stroke-width: 3; }
     .commit text { font-size: 18px; font-weight: 700; pointer-events: none; }
-    .commit.primary circle { stroke: var(--primary); stroke-width: 6; }
-    .commit.secondary circle { stroke: var(--secondary); stroke-width: 6; }
+    .commit.primary circle { stroke: #1f6feb; stroke-width: 6; }
+    .commit.secondary circle { stroke: #8250df; stroke-width: 6; }
     .branch-label { font-size: 17px; font-weight: 700; }
-    .panel { fill: var(--panel); stroke: var(--panel-border); stroke-width: 2; }
-    .panel-rule { stroke: var(--panel-border); stroke-width: 1.5; }
-    .tree-folder { fill: var(--folder); font-weight: 700; }
-    .tree-file { fill: var(--ink); }
-    .tree-file-added { fill: var(--added); font-weight: 700; }
-    .tree-file-modified { fill: var(--modified); font-weight: 700; }
-    .status-added { fill: var(--added); font-weight: 700; }
-    .status-modified { fill: var(--modified); font-weight: 700; }
-    .status-deleted { fill: var(--deleted); font-weight: 700; }
+    .panel-rule { stroke: #d0d7de; stroke-width: 1.5; }
+    .tree-folder { fill: #57606a; font-weight: 700; }
+    .tree-file { fill: #1f2328; }
+    .tree-file-added { fill: #1a7f37; font-weight: 700; }
+    .tree-file-modified { fill: #9a6700; font-weight: 700; }
+    .status-added { fill: #1a7f37; font-weight: 700; }
+    .status-modified { fill: #9a6700; font-weight: 700; }
+    .status-deleted { fill: #cf222e; font-weight: 700; }
     .legend-box { fill: #ffffff; stroke: #d0d7de; stroke-width: 1.5; }
-    .legend-swatch-added { fill: var(--added); }
-    .legend-swatch-modified { fill: var(--modified); }
-    .legend-swatch-deleted { fill: var(--deleted); }
+    .legend-swatch-added { fill: #1a7f37; }
+    .legend-swatch-modified { fill: #9a6700; }
+    .legend-swatch-deleted { fill: #cf222e; }
   </style>
 
   <rect width="1280" height="760" fill="#ffffff"/>
@@ -82,17 +64,17 @@
     <text x="500" y="271" class="branch-label">wurzelsepp</text>
 
     <g transform="translate(0,360)">
-      <rect x="0" y="0" width="560" height="180" rx="10" class="legend-box"/>
+      <rect x="0" y="0" width="560" height="205" rx="10" class="legend-box"/>
       <text x="18" y="30" class="label" font-weight="700">Bedienung</text>
       <text x="18" y="60" class="small">• Linksklick auf einen Commit → Snapshot dieses Commits</text>
       <text x="18" y="88" class="small">• Shift+Linksklick auf einen zweiten Commit → Dateidiff</text>
       <text x="18" y="116" class="small">• Normaler Klick → neue Snapshot-Auswahl</text>
 
       <text x="18" y="152" class="label" font-weight="700">Farben im Snapshot</text>
-      <rect x="170" y="140" width="16" height="16" rx="3" class="legend-swatch-added"/>
-      <text x="195" y="153" class="small">neu gegenüber Parent</text>
-      <rect x="360" y="140" width="16" height="16" rx="3" class="legend-swatch-modified"/>
-      <text x="385" y="153" class="small">geändert gegenüber Parent</text>
+      <rect x="18" y="169" width="16" height="16" rx="3" class="legend-swatch-added"/>
+      <text x="44" y="182" class="small">neu gegenüber Parent</text>
+      <rect x="250" y="169" width="16" height="16" rx="3" class="legend-swatch-modified"/>
+      <text x="276" y="182" class="small">geändert gegenüber Parent</text>
     </g>
   </g>
 

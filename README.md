@@ -30,26 +30,35 @@ Ein anderes Markdown-Dokument:
 http://127.0.0.1:8765/?doc=demo-interaktiv.md
 ```
 
-## Interaktives SVG einbetten
+## SVG-Diagramme einbetten
 
-Nicht:
-
-```markdown
-![Git](diagrams/git-commit-snapshot-diff.svg)
-```
-
-sondern:
+Die Diagramme werden grundsätzlich als `<object>` eingebettet:
 
 ```html
 <object
-  data="diagrams/git-commit-snapshot-diff.svg"
+  data="diagrams/setup-loop.svg"
   type="image/svg+xml"
   width="100%"
-  height="720">
+  height="390">
+  Ablauf von setup() und loop()
 </object>
 ```
 
-Das SVG wird dadurch als eigenes Dokument geladen und sein JavaScript läuft.
+Dadurch werden die SVGs als eigene Dokumente geladen. Sie können das gemeinsame
+`diagrams/diagram-theme.css`, lokale Fonts und bei Bedarf JavaScript verwenden.
+Die konkrete Höhe wird passend zum jeweiligen `viewBox` gesetzt.
+
+## Diagramm-Fonts
+
+Einmalig aus dem Repo-Root:
+
+```bash
+./scripts/fetch-diagram-fonts.sh
+```
+
+Das Skript legt Inter 4.1 und JetBrains Mono 2.304 samt Lizenzdateien unter
+`fonts/` ab. Die SVGs verwenden diese lokalen Dateien und fallen nur dann auf
+Systemfonts zurück, wenn die Dateien fehlen.
 
 ## Absichtliche Einschränkung
 

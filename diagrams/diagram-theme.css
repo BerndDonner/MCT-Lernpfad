@@ -1,0 +1,107 @@
+@font-face {
+  font-family: "MCT Inter";
+  src: url("../fonts/InterVariable.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "MCT JetBrains Mono";
+  src: url("../fonts/JetBrainsMonoVariable.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: block;
+}
+
+svg {
+  color: #1f2328;
+  font-family: "MCT Inter", Inter, system-ui, sans-serif;
+}
+
+text {
+  fill: #1f2328;
+  font-family: "MCT Inter", Inter, system-ui, sans-serif;
+}
+
+.mono {
+  font-family: "MCT JetBrains Mono", "JetBrains Mono", monospace;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.section-title {
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.label {
+  font-size: 18px;
+}
+
+.label-strong {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.small {
+  font-size: 15px;
+}
+
+.code {
+  font-family: "MCT JetBrains Mono", "JetBrains Mono", monospace;
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.code-strong {
+  font-family: "MCT JetBrains Mono", "JetBrains Mono", monospace;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.box {
+  fill: #ffffff;
+  stroke: #222222;
+  stroke-width: 2.5px;
+  rx: 10px;
+  ry: 10px;
+}
+
+.panel {
+  fill: #f6f8fa;
+  stroke: #d0d7de;
+  stroke-width: 2px;
+  rx: 14px;
+  ry: 14px;
+}
+
+.arrow-standard {
+  fill: none;
+  stroke: #222222;
+  stroke-width: 2.5px;
+}
+
+.arrow-primary {
+  fill: none;
+  stroke: #1f6feb;
+  stroke-width: 4px;
+}
+
+.arrow-muted {
+  fill: none;
+  stroke: #222222;
+  stroke-width: 2.2px;
+}
+
+.marker-standard { fill: #222222; }
+.marker-primary { fill: #1f6feb; }
+
+.guide {
+  fill: none;
+  stroke: #d8dee4;
+  stroke-width: 1px;
+}
