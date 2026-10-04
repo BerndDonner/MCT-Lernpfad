@@ -8,7 +8,28 @@ plattformabhängig:
 - `viewer/main.c` stellt unter Linux einen nativen Host für WebKitGTK bereit.
 
 Dadurch verwenden Browser und Linux-Viewer denselben Markdown-Renderer, dieselben
-Styles und dieselben SVG-Diagramme.
+Styles und dieselben SVG-Diagramme. Das eigentliche Markdown-Parsing übernimmt
+`markdown-it`; Viewer-spezifische Nachbearbeitung wie `IMPORTANT` und `MERKSATZ`
+bleibt in `viewer.js`.
+
+## Viewer-Abhängigkeiten aktualisieren
+
+`markdown-it` wird nicht über npm installiert und nicht von einem CDN geladen.
+Die gepinnte Browser-Datei wird reproduzierbar über Nix nach `vendor/` kopiert:
+
+```bash
+nix run .#update-viewer-deps
+```
+
+Danach die erzeugten Dateien direkt zu Git hinzufügen und mit committen:
+
+```bash
+git add vendor/markdown-it.min.js vendor/LICENSE.markdown-it
+```
+
+Das `git add` ist auch vor einem Test mit `nix build` oder `nix run` nötig, weil
+Flakes ungetrackte Dateien nicht in `self` aufnehmen. So verwenden Browser,
+Linux-Viewer und später weitere Hosts exakt dieselbe lokale Parser-Version.
 
 ## Linux-Viewer
 
@@ -114,9 +135,6 @@ Systemfonts zurück, wenn die Dateien fehlen.
 
 ## Absichtliche Einschränkung
 
-Der Viewer rendert Raw HTML absichtlich unverändert, damit `<object>` möglich
-ist. Deshalb nur vertrauenswürdige Markdown-Dateien damit öffnen.
-
-Der eingebaute Markdown-Renderer ist bewusst klein und deckt zunächst nur den
-Subset ab, den der MCT-Lernpfad aktuell braucht. Er kann später ohne Änderung
-am Dokumentformat durch markdown-it/marked ersetzt werden.
+Das Markdown wird mit dem lokal vendorten `markdown-it` gerendert. Raw HTML bleibt
+absichtlich aktiviert, damit `<object>` und die interaktiven SVG-Diagramme
+funktionieren. Deshalb nur vertrauenswürdige Markdown-Dateien damit öffnen.
