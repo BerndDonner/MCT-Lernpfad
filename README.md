@@ -10,7 +10,9 @@ plattformabhängig:
 Dadurch verwenden Browser und Linux-Viewer denselben Markdown-Renderer, dieselben
 Styles und dieselben SVG-Diagramme. Das eigentliche Markdown-Parsing übernimmt
 `markdown-it`; Viewer-spezifische Nachbearbeitung wie `IMPORTANT` und `MERKSATZ`
-bleibt in `viewer.js`.
+bleibt in `viewer.js`. C++-/Arduino-Fences (` ```cpp `, ` ```arduino ` usw.)
+erhalten dort außerdem ein kleines lokales Syntax-Highlighting ohne zusätzliche
+Browser-Abhängigkeit.
 
 ## Viewer-Abhängigkeiten aktualisieren
 

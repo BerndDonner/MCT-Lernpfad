@@ -170,3 +170,37 @@ th, td {
   border: 1px solid #cf222e;
   border-radius: 7px;
 }
+
+/* Leichtes Syntax-Highlighting für C++-/Arduino-Codeblöcke. */
+:root {
+  --syntax-keyword: #cf222e;
+  --syntax-type: #8250df;
+  --syntax-string: #0a3069;
+  --syntax-number: #0550ae;
+  --syntax-comment: #6e7781;
+  --syntax-function: #6639ba;
+  --syntax-literal: #0550ae;
+  --syntax-preprocessor: #953800;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --syntax-keyword: #ff7b72;
+    --syntax-type: #d2a8ff;
+    --syntax-string: #a5d6ff;
+    --syntax-number: #79c0ff;
+    --syntax-comment: #8b949e;
+    --syntax-function: #d2a8ff;
+    --syntax-literal: #79c0ff;
+    --syntax-preprocessor: #ffa657;
+  }
+}
+
+.syntax-keyword { color: var(--syntax-keyword); }
+.syntax-type { color: var(--syntax-type); }
+.syntax-string { color: var(--syntax-string); }
+.syntax-number { color: var(--syntax-number); }
+.syntax-comment { color: var(--syntax-comment); font-style: italic; }
+.syntax-function { color: var(--syntax-function); }
+.syntax-literal { color: var(--syntax-literal); }
+.syntax-preprocessor { color: var(--syntax-preprocessor); }
