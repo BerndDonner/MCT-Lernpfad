@@ -10,20 +10,33 @@
 
 ## Workflow
 
-
 > Herr Donner arbeitet nur auf dem Branch `master` im Verzeichnis `donner`.
+>
 > Schüler:
 > - zu Beginn der Stunde `git upmaster`
 > - arbeiten nur im eigenen Branch und im eigenen Verzeichnis.
 > - am Ende der Stunde einen commit aller Änderungen und ein push
+
+<!-- begin UE:3 add -->
+## Worktrees und Commits
+
+<object
+  data="diagrams/git-commit-snapshot-diff.svg"
+  type="image/svg+xml"
+  width="100%"
+  height="720">
+</object>
+<!-- end -->
 
 # C++ allgemein
 
 <!-- begin UE:1 add -->
 ## Deklarationen, Definitionen und Datentypen
 
-uint8_t a = 0xaf; //Angabe einer Hex-Zahl bei der Definition
-a = 0b10101111; //bin-Zahl
+```cpp
+uint8_t a = 0xaf;   // Angabe einer hex-Zahl bei der Definition
+a = 0b10101111;     // Zuweisung einer bin-Zahl
+```
 <!-- end -->
 
 ## Funktionen
@@ -135,11 +148,4 @@ Alle vier Funktionen gibt es auch als Newline Variante mit ln (printlnHex)
   width="100%"
   height="220">
   CPU und Speicher
-</object>
-
-<object
-  data="diagrams/git-commit-snapshot-diff.svg"
-  type="image/svg+xml"
-  width="100%"
-  height="720">
 </object>
