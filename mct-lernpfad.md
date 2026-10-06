@@ -49,7 +49,7 @@ a = 0b10101111;     // Zuweisung einer bin-Zahl
 <!-- begin UE:2 add -->
 ## sizeof
 
-Mit sizeof kann man herausfinden, wie viele Bytes ein Datentyp oder eine
+Mit `sizeof` kann man herausfinden, wie viele Bytes ein Datentyp oder eine
 Variable im Speicher belegt.
 
 ```cpp
@@ -57,21 +57,21 @@ uint8_t a = 42;
 
 Serial.println(sizeof(uint8_t));    // 1 Byte
 Serial.println(sizeof(uint16_t));   // 2 Bytes
-Serial.println(sizeof(a));          // 2 Bytes
+Serial.println(sizeof(a));          // 1 Bytes
 ```
 
-|Datentypen   |Größe in Bytes   |Wertebereich
-|:------------|:----------------|:-----------
-|uint8_t      |1                |0...255
-|int8_t       |1                |-128... 127
-|uint16_t     |2                |0...65 535
-|int16_t      |2                |-32 768...32 767
-|uint32_t     |4                |0...4 294 967 295
-|int32_t      |4                |-2 147 483 648...2 147 483 647
-|int          |2 oder 4         |wie int16_t oder int32_t
-|unsigned int |2 oder 4         |wie uint16_t oder uint32_t
-|char         |1                |alle ASCII-Zeichen
-|bool         |1                |true, false
+|Datentypen     |Größe in Bytes   |Wertebereich
+|:--------------|:----------------|:-----------
+|`uint8_t`      |1                |0...255
+|`int8_t`       |1                |-128... 127
+|`uint16_t`     |2                |0...65 535
+|`int16_t`      |2                |-32 768...32 767
+|`uint32_t`     |4                |0...4 294 967 295
+|`int32_t`      |4                |-2 147 483 648...2 147 483 647
+|`int`          |2 oder 4         |wie int16_t oder int32_t
+|`unsigned int` |2 oder 4         |wie uint16_t oder uint32_t
+|`char`         |1                |alle ASCII-Zeichen
+|`bool`         |1                |true, false
 
 ## Implizite und explizite Typkonvertierungen
 
@@ -112,12 +112,12 @@ Serial.print("Hex\tBinär\tZeichen\n"); // '\t' ist ein Tabulator
 ## for-Schleife
 
 ```cpp
-for (uint8_t i = 0; i < 10; ++i) { // Start; Abbruchbedingung; pro Durchlauf
+for (uint8_t i = 0; i < 10; ++i) { // starte mit..; solange .. mache {..}; pro Durchlauf..
   // Diese Codezeilen werden pro Durchlauf ausgeführt.
   Serial.println(i);
 }
 
-// Wird erst ausgeführt, wenn die Abbruchbedingung false ist.
+// Wird erst ausgeführt, wenn die Bedingung false ist.
 Serial.println("Ende der Schleife");
 ```
 
@@ -170,18 +170,16 @@ void setup() {
 ```
 
 Alle vier Funktionen gibt es auch als Newline Variante mit ln (printlnHex)
-
-<object
-  data="diagrams/daten-intern-extern.svg"
-  type="image/svg+xml"
-  width="100%"
-  height="360">
-  Eingabe, Bitmuster in den Speicherbytes und Ausgabe
-</object>
 <!-- end -->
 
+<!-- begin UE:2 add -->
+## Liste einiger bereits verwendeter Funktionen
 
-
+```cpp
+pinMode(2, INPUT_PULLUP);       //notwendig, um einen Taster an Pin 2 anzuschließen
+uint16_t rawX = analogRead(A0); //einlesen eines analogen Wertes (0-1023) vom Pin A0
+```
+<!-- end -->
 
 # Mikrocontroller
 
@@ -191,6 +189,14 @@ Alle vier Funktionen gibt es auch als Newline Variante mit ln (printlnHex)
 - Ein Byte sind 8 Bits
 - Ein Mikrocontroller arbeitet nur mit Bytes nicht mit Bits
 - Im Speicher liegen keine Zahlen, Buchstaben oder Texte, sondern nur Bitmuster
+
+<object
+  data="diagrams/daten-intern-extern.svg"
+  type="image/svg+xml"
+  width="100%"
+  height="360">
+  Eingabe, Bitmuster in den Speicherbytes und Ausgabe
+</object>
 <!-- end -->
 
 ## Modell des Microcontrollers
