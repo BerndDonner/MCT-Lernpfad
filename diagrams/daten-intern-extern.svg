@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg"
      width="1200" height="360" viewBox="0 0 1200 360">
-  <style>@import url("diagram-theme.css");</style>
+  <style>@import url("diagram-theme.css");
+    .tok-type { fill: #0550ae; }
+    .tok-ident { fill: #1f2328; }
+    .tok-op { fill: #6e7781; }
+    .tok-num { fill: #0a7f70; }
+    .tok-char { fill: #953800; }
+    .tok-punct { fill: #6e7781; }
+  </style>
 
   <title>Externe Darstellung und internes Bitmuster</title>
   <desc>Verschiedene typisierte Schreibweisen im Code führen zum selben Bitmuster in einem Speicherbyte. Rechts ist dargestellt, wie Typ und optionales Ausgabeformat zu verschiedenen Darstellungen führen.</desc>
@@ -13,40 +20,82 @@
     </marker>
   </defs>
 
+  <!-- Section headings -->
   <text x="220" y="45" text-anchor="middle" class="section-title">EINGABE</text>
   <text x="600" y="45" text-anchor="middle" class="section-title">MIKROCONTROLLER</text>
-  <text x="990" y="45" text-anchor="middle" class="section-title">AUSGABE</text>
+  <text x="945" y="45" text-anchor="middle" class="section-title">AUSGABE</text>
 
   <text x="220" y="82" text-anchor="middle" class="label-strong">unser Code</text>
   <text x="600" y="82" text-anchor="middle" class="label-strong">Bitmuster im Speicher</text>
-  <text x="990" y="82" text-anchor="middle" class="label-strong">Typ / Format → Ergebnis</text>
+  <text x="945" y="82" text-anchor="middle" class="label-strong">Typ / Format → Ergebnis</text>
 
   <line x1="350" y1="75" x2="485" y2="75"
         class="arrow-standard" marker-end="url(#arrow-end)"/>
   <line x1="710" y1="75" x2="830" y2="75"
         class="arrow-standard" marker-end="url(#arrow-end)"/>
 
-  <!-- Eine komplette logische Tabellenzeile. Weitere Gruppen können
-       abwechselnd table-row und table-row-alt verwenden. -->
   <rect x="25" y="108" width="1150" height="220" class="table-row"/>
 
+  <!-- Left column: code with simple syntax highlighting and aligned '=' -->
   <g id="code-forms" class="code">
-    <text x="55" y="145">uint8_t a = 0b01000001;</text>
-    <text x="55" y="195">uint8_t b = 65;</text>
-    <text x="55" y="245">uint8_t c = 0x41;</text>
-    <text x="55" y="295">char    d = 'A';</text>
+    <text y="145">
+      <tspan x="55" class="tok-type">uint8_t</tspan>
+      <tspan x="170" class="tok-ident">a</tspan>
+      <tspan x="230" class="tok-op">=</tspan>
+      <tspan x="270" class="tok-num">0b01000001</tspan>
+      <tspan class="tok-punct">;</tspan>
+    </text>
+    <text y="195">
+      <tspan x="55" class="tok-type">uint8_t</tspan>
+      <tspan x="170" class="tok-ident">b</tspan>
+      <tspan x="230" class="tok-op">=</tspan>
+      <tspan x="270" class="tok-num">65</tspan>
+      <tspan class="tok-punct">;</tspan>
+    </text>
+    <text y="245">
+      <tspan x="55" class="tok-type">uint8_t</tspan>
+      <tspan x="170" class="tok-ident">c</tspan>
+      <tspan x="230" class="tok-op">=</tspan>
+      <tspan x="270" class="tok-num">0x41</tspan>
+      <tspan class="tok-punct">;</tspan>
+    </text>
+    <text y="295">
+      <tspan x="55" class="tok-type">char</tspan>
+      <tspan x="170" class="tok-ident">d</tspan>
+      <tspan x="230" class="tok-op">=</tspan>
+      <tspan x="270" class="tok-char">'A'</tspan>
+      <tspan class="tok-punct">;</tspan>
+    </text>
   </g>
 
+  <!-- Middle column: one byte in memory -->
   <g id="memory-byte">
     <rect x="508" y="172" width="184" height="60" class="box"/>
     <text x="600" y="211" text-anchor="middle" class="code-strong">01000001</text>
     <text x="600" y="259" text-anchor="middle" class="small mono">1 Byte</text>
   </g>
 
+  <!-- Right column: aligned arrows and values -->
   <g id="output-forms" class="code">
-    <text x="795" y="145">uint8_t, BIN → 01000001</text>
-    <text x="795" y="195">uint8_t      → 65</text>
-    <text x="795" y="245">uint8_t, HEX → 41</text>
-    <text x="795" y="295">char         → A</text>
+    <text y="145">
+      <tspan x="790" class="tok-type">uint8_t, BIN</tspan>
+      <tspan x="1010" class="tok-op">→</tspan>
+      <tspan x="1055" class="tok-num">01000001</tspan>
+    </text>
+    <text y="195">
+      <tspan x="790" class="tok-type">uint8_t</tspan>
+      <tspan x="1010" class="tok-op">→</tspan>
+      <tspan x="1055" class="tok-num">65</tspan>
+    </text>
+    <text y="245">
+      <tspan x="790" class="tok-type">uint8_t, HEX</tspan>
+      <tspan x="1010" class="tok-op">→</tspan>
+      <tspan x="1055" class="tok-num">41</tspan>
+    </text>
+    <text y="295">
+      <tspan x="790" class="tok-type">char</tspan>
+      <tspan x="1010" class="tok-op">→</tspan>
+      <tspan x="1055" class="tok-char">A</tspan>
+    </text>
   </g>
 </svg>
