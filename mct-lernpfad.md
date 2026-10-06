@@ -3,6 +3,19 @@
 - Die Ascii-Tabelle (Steuerzeichen, Ziffern, Buchstaben alphabetisch geordent,
   keine Umlaute)
 
+- Zwischen Binär- und Hex-Zahlen kann man  blockweise umrechnen.
+  
+  |Binär|Hexadezimal|Binär|Hexadezimal|
+  |:---:|:----------:|:---:|:----------:|
+  |`0000`|`0`|`1000`|`8`|
+  |`0001`|`1`|`1001`|`9`|
+  |`0010`|`2`|`1010`|`A`|
+  |`0011`|`3`|`1011`|`B`|
+  |`0100`|`4`|`1100`|`C`|
+  |`0101`|`5`|`1101`|`D`|
+  |`0110`|`6`|`1110`|`E`|
+  |`0111`|`7`|`1111`|`F`|
+
 # Git
 
 ## Commands / VS-Code-Schaltflächen

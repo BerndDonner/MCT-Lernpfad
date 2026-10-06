@@ -1,11 +1,9 @@
 # Bitoperationen, Zahlendarstellung und Zweierkomplement
 
-> [!NOTE]
-> Dieses Dokument ist ein **Entwurf**. Es überträgt ältere Tafel-/Screenshot-Notizen in den Stil des MCT-Lernpfads und ist bewusst noch nicht in `mct-lernpfad.md` eingebaut.
-
 ## Binär und Hexadezimal
 
-Ein Hexadezimalzeichen beschreibt genau **vier Bits**. Deshalb lässt sich zwischen Binär- und Hexadezimalschreibweise blockweise umrechnen.
+Ein Hexadezimalzeichen beschreibt genau **vier Bits**. Deshalb lässt sich
+zwischen Binär- und Hexadezimalschreibweise blockweise umrechnen.
 
 |Binär|Hexadezimal|Binär|Hexadezimal|
 |:---:|:----------:|:---:|:----------:|
@@ -31,12 +29,15 @@ Beispiel:
    - `0b11110000` → Hexadezimal
    - `0x3A` → Binär
    - `0xC7` → Binär
-2. Wie viele Hexadezimalstellen benötigt man für einen `uint8_t`? Wie viele für einen `uint16_t`?
-3. Erklären Sie, warum sich Hexadezimalzahlen für Registerwerte besser lesen lassen als lange Binärzahlen.
+2. Wie viele Hexadezimalstellen benötigt man für einen `uint8_t`? Wie viele
+   für einen `uint16_t`?
+3. Erklären Sie, warum sich Hexadezimalzahlen für Registerwerte besser lesen
+   lassen als lange Binärzahlen.
 
 ## Bitweise Operatoren
 
-Bitoperationen bearbeiten **jedes Bit einzeln**. Die beiden Eingangswerte werden Bit für Bit miteinander verknüpft.
+Bitoperationen bearbeiten **jedes Bit einzeln**. Die beiden Eingangswerte
+werden Bit für Bit miteinander verknüpft.
 
 |`a`|`b`|`a & b`|<code>a &#124; b</code>|`a ^ b`|
 |:-:|:-:|:-----:|:------:|:-----:|
@@ -336,9 +337,8 @@ Ein `uint8_t` hat 8 Bit und damit 256 Zustände. Nach `255` folgt wieder `0`.
   Überlauf eines 8-Bit-Zählers
 </object>
 
-Mathematisch wird bei einem N-Bit-Unsigned-Wert **modulo `2^N`** gerechnet. Für 8 Bit also modulo 256.
-
-Das ist bei frei laufenden Hardware-Zählern nützlich: Auch wenn der Zähler zwischen zwei Messungen überläuft, kann der Abstand bestimmt werden.
+Das ist bei frei laufenden Hardware-Zählern nützlich: Auch wenn der Zähler
+zwischen zwei Messungen überläuft, kann der Abstand bestimmt werden.
 
 ```cpp
 uint8_t start = 0xFF;
@@ -355,14 +355,22 @@ uint8_t delta = static_cast<uint8_t>(ende - start);
 ```
 
 > [!IMPORTANT]
-> Kleine Integer-Typen wie `uint8_t` werden in C++ bei Rechnungen häufig zunächst zu `int` erweitert. Im Beispiel sorgt das Speichern bzw. der `static_cast<uint8_t>` dafür, dass das Ergebnis wieder als 8-Bit-Unsigned-Wert interpretiert wird. Verlassen Sie sich nicht darauf, dass jeder Zwischenausdruck automatisch bereits auf 8 Bit überläuft.
+> Kleine Integer-Typen wie `uint8_t` werden in C++ bei Rechnungen häufig
+> zunächst zu `int` erweitert. Im Beispiel sorgt das Speichern bzw. der
+> Description`static_cast<uint8_t>` dafür, dass das Ergebnis wieder als 8-Bit-Unsigned-Wert
+> interpretiert wird. Verlassen Sie sich nicht darauf, dass jeder
+> Zwischenausdruck automatisch bereits auf 8 Bit überläuft.
 
 ### Aufgaben
 
-1. Ein `uint8_t`-Zähler startet bei `0xFC` und steht später bei `0x04`. Wie viele Schritte sind vergangen?
-2. Zeichnen Sie die Folge eines 4-Bit-Unsigned-Zählers von `0xD` über den Überlauf bis `0x3`.
-3. Ein 16-Bit-Timer startet bei `0xFFFA` und wird bei `0x0005` erneut gelesen. Bestimmen Sie die vergangene Anzahl von Timerschritten **modulo 65536**.
-4. Erklären Sie, warum ein Überlauf bei einem vorzeichenlosen Zähler nicht automatisch bedeutet, dass eine Zeitdifferenzmessung falsch wird.
+1. Ein `uint8_t`-Zähler startet bei `0xFC` und steht später bei `0x04`.
+   Wie viele Schritte sind vergangen?
+2. Zeichnen Sie die Folge eines 4-Bit-Unsigned-Zählers von `0xD` über den
+   Überlauf bis `0x3`.
+3. Ein 16-Bit-Timer startet bei `0xFFFA` und wird bei `0x0005` erneut
+   gelesen. Bestimmen Sie die vergangene Anzahl von Timerschritten.
+4. Erklären Sie, warum ein Überlauf bei einem vorzeichenlosen Zähler nicht
+   automatisch bedeutet, dass eine Zeitdifferenzmessung falsch wird.
 
 # Verbindung zum LIS3DH-Treiber
 
@@ -385,8 +393,8 @@ Gegeben sei ein 8-Bit-Konfigurationsregister:
 ```text
 Bit:       7   6   5   4   3   2   1   0
 Inhalt:    1   0   1   1   0   1   1   0
-                └───┬───┘
-                  Feld F
+                  └──┬──┘
+                   Feld F
 ```
 
 Das Feld `F` liege auf den Bits 5 und 4.
