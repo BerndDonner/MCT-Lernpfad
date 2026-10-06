@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="330" viewBox="0 0 1200 330">
+  <style>@import url("diagram-theme.css");
+    .hex { font-family: "MCT JetBrains Mono", "JetBrains Mono", monospace; font-size: 27px; font-weight: 650; }
+    .dec { font-family: "MCT JetBrains Mono", "JetBrains Mono", monospace; font-size: 16px; fill: #656d76; }
+    .node { fill: #ffffff; stroke: #8c959f; stroke-width: 2px; rx: 10px; ry: 10px; }
+    .wrap { fill: #fff8c5; stroke: #d4a72c; stroke-width: 2.5px; rx: 10px; ry: 10px; }
+  </style>
+  <title>Überlauf eines 8-Bit-Zählers</title>
+  <desc>Ein uint8_t läuft nach 255 wieder bei 0 weiter. Der Abstand über den Überlauf kann modulo 256 bestimmt werden.</desc>
+  <defs>
+    <marker id="arrow-end" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" class="marker-standard"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="50" class="title">8-Bit-Zähler und Überlauf</text>
+  <text x="40" y="88" class="label">Ein <tspan class="mono">uint8_t</tspan> besitzt 256 verschiedene Bitmuster: 0 … 255.</text>
+
+  <g transform="translate(55,120)">
+    <rect x="0" y="0" width="125" height="75" class="node"/>
+    <text x="62" y="34" text-anchor="middle" class="hex">0xFE</text><text x="62" y="59" text-anchor="middle" class="dec">254</text>
+    <line x1="130" y1="38" x2="170" y2="38" class="arrow-standard" marker-end="url(#arrow-end)"/>
+
+    <rect x="180" y="0" width="125" height="75" class="node"/>
+    <text x="242" y="34" text-anchor="middle" class="hex">0xFF</text><text x="242" y="59" text-anchor="middle" class="dec">255</text>
+    <line x1="310" y1="38" x2="350" y2="38" class="arrow-standard" marker-end="url(#arrow-end)"/>
+
+    <rect x="360" y="0" width="125" height="75" class="wrap"/>
+    <text x="422" y="34" text-anchor="middle" class="hex">0x00</text><text x="422" y="59" text-anchor="middle" class="dec">0</text>
+    <text x="422" y="101" text-anchor="middle" class="small">Überlauf</text>
+    <line x1="490" y1="38" x2="530" y2="38" class="arrow-standard" marker-end="url(#arrow-end)"/>
+
+    <rect x="540" y="0" width="125" height="75" class="node"/>
+    <text x="602" y="34" text-anchor="middle" class="hex">0x01</text><text x="602" y="59" text-anchor="middle" class="dec">1</text>
+    <line x1="670" y1="38" x2="710" y2="38" class="arrow-standard" marker-end="url(#arrow-end)"/>
+
+    <rect x="720" y="0" width="125" height="75" class="node"/>
+    <text x="782" y="34" text-anchor="middle" class="hex">0x02</text><text x="782" y="59" text-anchor="middle" class="dec">2</text>
+    <line x1="850" y1="38" x2="890" y2="38" class="arrow-standard" marker-end="url(#arrow-end)"/>
+
+    <rect x="900" y="0" width="125" height="75" class="node"/>
+    <text x="962" y="34" text-anchor="middle" class="hex">0x03</text><text x="962" y="59" text-anchor="middle" class="dec">3</text>
+  </g>
+
+  <text x="55" y="284" class="label"><tspan class="mono">start = 0xFF</tspan>, <tspan class="mono">ende = 0x03</tspan>: Abstand = 4 Schritte (modulo 256).</text>
+</svg>
