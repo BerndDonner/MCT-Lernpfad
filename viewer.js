@@ -613,6 +613,63 @@ function enhanceAlerts(root) {
   }
 }
 
+let ueGutterFrame = 0;
+
+function updateUEGutter(root) {
+  for (const marker of root.querySelectorAll(":scope > .ue-gutter-segment")) {
+    marker.remove();
+  }
+
+  const rootRect = root.getBoundingClientRect();
+  const ranges = [];
+
+  for (const element of root.querySelectorAll(".ue-current, .ue-current-line")) {
+    // Ein vollständig neuer äußerer Block reicht als Markierung. Darin liegende
+    // Kind-Elemente würden sonst denselben Bereich mehrfach eintragen.
+    if (element.classList.contains("ue-current")) {
+      if (element.parentElement?.closest(".ue-current")) continue;
+    } else if (element.closest(".ue-current")) {
+      continue;
+    }
+
+    const rect = element.getBoundingClientRect();
+    if (rect.height <= 0 || rect.width <= 0) continue;
+
+    ranges.push({
+      top: rect.top - rootRect.top,
+      bottom: rect.bottom - rootRect.top,
+    });
+  }
+
+  ranges.sort((a, b) => a.top - b.top || a.bottom - b.bottom);
+
+  // Direkt aneinanderstoßende Codezeilen sollen wie ein durchgehender grüner
+  // Streifen aussehen. Kleine Rundungsdifferenzen des Browsers werden toleriert.
+  const merged = [];
+  for (const range of ranges) {
+    const previous = merged.at(-1);
+    if (previous && range.top <= previous.bottom + 1) {
+      previous.bottom = Math.max(previous.bottom, range.bottom);
+    } else {
+      merged.push({ ...range });
+    }
+  }
+
+  for (const range of merged) {
+    const marker = document.createElement("span");
+    marker.className = "ue-gutter-segment";
+    marker.style.top = `${range.top}px`;
+    marker.style.height = `${Math.max(1, range.bottom - range.top)}px`;
+    marker.setAttribute("aria-hidden", "true");
+    root.append(marker);
+  }
+}
+
+function scheduleUEGutter(root = content) {
+  cancelAnimationFrame(ueGutterFrame);
+  ueGutterFrame = requestAnimationFrame(() => updateUEGutter(root));
+}
+
 function resolveEmbeddedResources(root) {
   const attributes = [
     ["img[src]", "src"],
@@ -706,6 +763,7 @@ function renderSelectedUE() {
     content.innerHTML = markdown.render(renderInfo.markdown, { ueRenderInfo: renderInfo });
     enhanceAlerts(content);
     resolveEmbeddedResources(content);
+    scheduleUEGutter(content);
     updateNavigation();
     writeUEToUrl(selectedUE);
     document.title = `MCT-Lernpfad – ${selectedUE === 0 ? "Basis" : `UE ${selectedUE}`}`;
@@ -741,6 +799,13 @@ function selectUE(ue) {
   selectedUE = target;
   renderSelectedUE();
 }
+
+if ("ResizeObserver" in window) {
+  const ueGutterResizeObserver = new ResizeObserver(() => scheduleUEGutter(content));
+  ueGutterResizeObserver.observe(content);
+}
+window.addEventListener("resize", () => scheduleUEGutter(content));
+content.addEventListener("load", () => scheduleUEGutter(content), true);
 
 previousUEButton.addEventListener("click", () => selectUE(selectedUE - 1));
 nextUEButton.addEventListener("click", () => selectUE(selectedUE + 1));

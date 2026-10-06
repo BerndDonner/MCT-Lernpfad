@@ -112,6 +112,7 @@ button:disabled {
 }
 
 .markdown-body {
+  position: relative;
   width: min(1180px, calc(100% - 48px));
   margin: 0 auto;
   padding: 28px 0 80px;
@@ -156,55 +157,28 @@ pre {
 
 pre code { background: transparent; }
 
-/* Neue Inhalte der aktuell gewählten UE bekommen nur einen schmalen Gutter.
-   Kein Rahmen und keine Hintergrundfarbe: der bestehende Lernpfad bleibt ruhig. */
-.ue-current {
-  position: relative;
-}
-
-.ue-current::before {
-  content: "";
+/* Neue Inhalte der aktuell gewählten UE werden in einer festen Gutter-Spalte
+   links vom gesamten Dokument markiert. Dadurch bleibt der grüne Streifen auf
+   exakt derselben x-Position – unabhängig davon, ob der neue Inhalt ein Absatz,
+   eine Liste, eine Tabellenzeile oder eine einzelne Codezeile ist. */
+.ue-gutter-segment {
   position: absolute;
-  top: 0;
-  bottom: 0;
   left: -14px;
   width: 4px;
   border-radius: 2px;
   background: var(--ue-new);
+  pointer-events: none;
 }
 
-/* Wenn ein kompletter äußerer Markdown-Block neu ist, reicht dessen Gutter. */
-.ue-current .ue-current::before {
-  display: none;
-}
-
-/* Pseudo-Elemente auf Tabellenzeilen sind browserabhängig. Dort markieren wir
-   stattdessen die linke Kante der ersten Zelle. */
-tr.ue-current::before { display: none; }
-tr.ue-current > :first-child {
-  box-shadow: inset 4px 0 var(--ue-new);
-}
-
-/* Code wird zeilenweise gerendert, damit nur die tatsächlich neuen Zeilen
-   markiert werden. Benachbarte Marker stoßen direkt aneinander und wirken wie
-   ein einziger durchgehender Streifen. */
+/* Code wird weiterhin zeilenweise gerendert. Die eigentliche Markierung wird
+   danach aus den Positionen der .ue-current-line-Elemente in den festen Gutter
+   projiziert; der Codeblock selbst muss dafür nicht verschoben werden. */
 pre code .code-line {
-  position: relative;
   display: inline-block;
   min-width: 100%;
   min-height: 1.55em;
   margin: 0 -16px;
   padding: 0 16px;
-}
-
-pre code .code-line.ue-current-line::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 4px;
-  background: var(--ue-new);
 }
 
 .ue-current-html {
