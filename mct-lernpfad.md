@@ -1,3 +1,8 @@
+# Grundwissen
+
+- Die Ascii-Tabelle (Steuerzeichen, Ziffern, Buchstaben alphabetisch geordent,
+  keine Umlaute)
+
 # Git
 
 ## Commands / VS-Code-Schaltflächen
@@ -31,11 +36,58 @@
 # C++ allgemein
 
 <!-- begin UE:1 add -->
-## Deklarationen, Definitionen und Datentypen
+## Definitionen und Datentypen
+
+Eine Variable darf nur einmal definiert werden.
 
 ```cpp
-uint8_t a = 0xaf;   // Angabe einer hex-Zahl bei der Definition
+uint8_t a = 0xaf;   // Definition von a und Initialisierung mit einer hex-Zahl 
 a = 0b10101111;     // Zuweisung einer bin-Zahl
+```
+<!-- end -->
+
+<!-- begin UE:2 add -->
+## sizeof
+
+Mit sizeof kann man herausfinden, wie viele Bytes ein Datentyp oder eine
+Variable im Speicher belegt.
+
+```cpp
+uint8_t a = 42;
+
+Serial.println(sizeof(uint8_t));    // 1 Byte
+Serial.println(sizeof(uint16_t));   // 2 Bytes
+Serial.println(sizeof(a));          // 2 Bytes
+```
+
+|Datentypen   |Größe in Bytes   |Wertebereich
+|:------------|:----------------|:-----------
+|uint8_t      |1                |0...255
+|int8_t       |1                |-128... 127
+|uint16_t     |2                |0...65 535
+|int16_t      |2                |-32 768...32 767
+|uint32_t     |4                |0...4 294 967 295
+|int32_t      |4                |-2 147 483 648...2 147 483 647
+|int          |2 oder 4         |wie int16_t oder int32_t
+|unsigned int |2 oder 4         |wie uint16_t oder uint32_t
+|char         |1                |alle ASCII-Zeichen
+|bool         |1                |true, false
+
+## Implizite und explizite Typkonvertierungen
+
+Zwischen den elementaren Datentypen erlaubt C/C++ leider sehr viele implizite
+Typkonvertierungen – auch solche, bei denen Information verloren gehen
+kann.
+
+Müssen wir einen Wert gezielt in einen anderen Datentyp umwandeln, verwenden
+wir static_cast.
+
+```cpp
+char c = 'A';
+
+Serial.println(c);                            // A
+Serial.println(static_cast<uint8_t>(c));      // 65
+Serial.println(static_cast<uint8_t>(c), BIN); // 1000001
 ```
 <!-- end -->
 
@@ -54,7 +106,7 @@ void setup() {          // setup ist eine Funktion
 
 ```cpp
 Serial.print("Hex\tBinär\tZeichen\n"); // '\t' ist ein Tabulator
-                                         // '\n' ist eine Newline
+                                       // '\n' ist eine Newline
 ```
 
 ## for-Schleife
@@ -93,7 +145,7 @@ void loop() {
 
 ```cpp
 void setup() {
-  Serial.begin(115200);          // Initialisierung
+  Serial.begin(115200);          // Initialisierung von Serial
   Serial.print("1. ");           // Ausgabe ohne neue Zeile
   Serial.println("Hallo Welt!"); // Ausgabe mit neuer Zeile
 <!-- begin UE:1 add -->
@@ -138,7 +190,8 @@ Alle vier Funktionen gibt es auch als Newline Variante mit ln (printlnHex)
 
 - Ein Byte sind 8 Bits
 - Ein Mikrocontroller arbeitet nur mit Bytes nicht mit Bits
-- Im Speicher liegen keine Zahlen, Buchstaben oder Texte, sondern nur Bitmuster<!-- end -->
+- Im Speicher liegen keine Zahlen, Buchstaben oder Texte, sondern nur Bitmuster
+<!-- end -->
 
 ## Modell des Microcontrollers
 

@@ -4,7 +4,7 @@
   <style>@import url("diagram-theme.css");</style>
 
   <title>Externe Darstellung und internes Bitmuster</title>
-  <desc>Verschiedene Schreibweisen im Code und verschiedene Ausgaben beziehen sich auf dasselbe Bitmuster in einem Speicherbyte.</desc>
+  <desc>Verschiedene typisierte Schreibweisen im Code führen zum selben Bitmuster in einem Speicherbyte. Rechts ist dargestellt, wie Typ und optionales Ausgabeformat zu verschiedenen Darstellungen führen.</desc>
 
   <defs>
     <marker id="arrow-end" viewBox="0 0 10 10" refX="9" refY="5"
@@ -13,24 +13,28 @@
     </marker>
   </defs>
 
-  <text x="150" y="45" text-anchor="middle" class="section-title">EINGABE</text>
+  <text x="220" y="45" text-anchor="middle" class="section-title">EINGABE</text>
   <text x="600" y="45" text-anchor="middle" class="section-title">MIKROCONTROLLER</text>
-  <text x="1040" y="45" text-anchor="middle" class="section-title">AUSGABE</text>
+  <text x="990" y="45" text-anchor="middle" class="section-title">AUSGABE</text>
 
-  <text x="150" y="82" text-anchor="middle" class="label-strong">unser Code</text>
-  <text x="600" y="82" text-anchor="middle" class="label-strong">Bitmuster in den Speicherbytes</text>
-  <text x="1040" y="82" text-anchor="middle" class="label-strong">Darstellung</text>
+  <text x="220" y="82" text-anchor="middle" class="label-strong">unser Code</text>
+  <text x="600" y="82" text-anchor="middle" class="label-strong">Bitmuster im Speicher</text>
+  <text x="990" y="82" text-anchor="middle" class="label-strong">Typ / Format → Ergebnis</text>
 
-  <line x1="245" y1="75" x2="425" y2="75"
+  <line x1="350" y1="75" x2="485" y2="75"
         class="arrow-standard" marker-end="url(#arrow-end)"/>
-  <line x1="775" y1="75" x2="945" y2="75"
+  <line x1="710" y1="75" x2="830" y2="75"
         class="arrow-standard" marker-end="url(#arrow-end)"/>
+
+  <!-- Eine komplette logische Tabellenzeile. Weitere Gruppen können
+       abwechselnd table-row und table-row-alt verwenden. -->
+  <rect x="25" y="108" width="1150" height="220" class="table-row"/>
 
   <g id="code-forms" class="code">
-    <text x="95" y="145">0b01000001</text>
-    <text x="95" y="195">65</text>
-    <text x="95" y="245">0x41</text>
-    <text x="95" y="295">'A'</text>
+    <text x="55" y="145">uint8_t a = 0b01000001;</text>
+    <text x="55" y="195">uint8_t b = 65;</text>
+    <text x="55" y="245">uint8_t c = 0x41;</text>
+    <text x="55" y="295">char    d = 'A';</text>
   </g>
 
   <g id="memory-byte">
@@ -40,9 +44,9 @@
   </g>
 
   <g id="output-forms" class="code">
-    <text x="985" y="145">01000001</text>
-    <text x="985" y="195">65</text>
-    <text x="985" y="245">41</text>
-    <text x="985" y="295">A</text>
+    <text x="795" y="145">uint8_t, BIN → 01000001</text>
+    <text x="795" y="195">uint8_t      → 65</text>
+    <text x="795" y="245">uint8_t, HEX → 41</text>
+    <text x="795" y="295">char         → A</text>
   </g>
 </svg>

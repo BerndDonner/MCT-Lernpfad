@@ -105,3 +105,19 @@ text {
   stroke: #d8dee4;
   stroke-width: 1px;
 }
+
+/* Horizontale Gruppen für mehrzeilige, logisch zusammengehörende Tabellenzeilen. */
+.table-row,
+.table-row-alt {
+  stroke: none;
+  rx: 14px;
+  ry: 14px;
+}
+
+.table-row {
+  fill: #f6f8fa;
+}
+
+.table-row-alt {
+  fill: #ffffff;
+}
