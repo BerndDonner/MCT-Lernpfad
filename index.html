@@ -8,10 +8,20 @@
 </head>
 <body>
   <header class="toolbar">
-    <strong id="app-title">MCT-Lernpfad</strong>
-    <span class="spacer"></span>
-    <span id="status" aria-live="polite"></span>
-    <button id="reload" type="button" title="Dokument neu laden">Neu laden</button>
+    <div class="toolbar-title">
+      <strong id="app-title">MCT-Lernpfad</strong>
+    </div>
+
+    <nav class="ue-navigation" aria-label="Unterrichtseinheit">
+      <button id="previous-ue" class="ue-step" type="button" aria-label="Vorherige Unterrichtseinheit">‹</button>
+      <span id="ue-label" aria-live="polite">Basis</span>
+      <button id="next-ue" class="ue-step" type="button" aria-label="Nächste Unterrichtseinheit">›</button>
+    </nav>
+
+    <div class="toolbar-actions">
+      <span id="status" aria-live="polite"></span>
+      <button id="reload" type="button" title="Dokument neu laden">Neu laden</button>
+    </div>
   </header>
 
   <main id="content" class="markdown-body"></main>

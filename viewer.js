@@ -6,6 +6,9 @@
 const content = document.querySelector("#content");
 const statusEl = document.querySelector("#status");
 const reloadButton = document.querySelector("#reload");
+const previousUEButton = document.querySelector("#previous-ue");
+const nextUEButton = document.querySelector("#next-ue");
+const ueLabel = document.querySelector("#ue-label");
 
 const host = window.viewerHost;
 if (!host) {
@@ -19,24 +22,294 @@ if (typeof window.markdownit !== "function") {
 }
 
 const cppLanguages = new Set(["cpp", "c++", "cxx", "cc", "h", "hpp", "arduino"]);
-
-const markdown = window.markdownit({
-  html: true,
-  linkify: false,
-  typographer: false,
-  breaks: false,
-  highlight(code, language) {
-    const lang = (language || "").trim().toLowerCase();
-    return cppLanguages.has(lang) ? highlightCpp(code) : escapeHtml(code);
-  },
-});
-
 const documentPath = host.documentPath || "mct-lernpfad.md";
+
+let sourceMarkdown = "";
+let selectedUE = readUEFromUrl();
+let maxUE = 0;
 
 function escapeHtml(s) {
   return s.replaceAll("&", "&amp;")
           .replaceAll("<", "&lt;")
-          .replaceAll(">", "&gt;");
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;");
+}
+
+class UEStructureError extends Error {
+  constructor(message, line, relatedLine = null, hint = "") {
+    super(message);
+    this.name = "UEStructureError";
+    this.line = line;
+    this.relatedLine = relatedLine;
+    this.hint = hint;
+  }
+}
+
+// Unterstützt sowohl die bereits verwendete Schreibweise
+//   <!-- begin UE:3 add -->
+// als auch die kompaktere geplante Form
+//   <!--@UE:3 begin add-->
+// Replace-Blöcke beginnen entsprechend mit "del" und wechseln mit <!--add-->.
+function parseUETag(line) {
+  let candidate = line;
+
+  // Tags dürfen innerhalb eines Blockquotes stehen. Die Markdown-Präfixe
+  // gehören nicht zur Tag-Syntax und werden nur für die Erkennung entfernt.
+  while (/^\s*>/.test(candidate)) {
+    candidate = candidate.replace(/^\s*>\s?/, "");
+  }
+  candidate = candidate.trim();
+
+  let match = candidate.match(
+    /^<!--\s*begin\s+UE\s*:\s*(\d+)\s+(add|del)\s*-->$/i
+  );
+  if (!match) {
+    match = candidate.match(
+      /^<!--\s*@?UE\s*:\s*(\d+)\s+begin\s+(add|del)\s*-->$/i
+    );
+  }
+
+  if (match) {
+    return {
+      type: "begin",
+      ue: Number.parseInt(match[1], 10),
+      kind: match[2].toLowerCase() === "del" ? "replace" : "add",
+    };
+  }
+
+  if (/^<!--\s*add\s*-->$/i.test(candidate)) {
+    return { type: "replace-add" };
+  }
+
+  if (/^<!--\s*end\s*-->$/i.test(candidate)) {
+    return { type: "end" };
+  }
+
+  // Sieht die Zeile nach einem UE-Steuertag aus, ist aber syntaktisch kaputt,
+  // melden wir den Fehler sofort statt den Kommentar still zu ignorieren.
+  const looksLikeUETag =
+    /<!--[^>]*(?:UE\s*:|@UE\s*:|\bbegin\b[^>]*\b(?:add|del)\b|^\s*(?:add|end)\b)/i
+      .test(candidate);
+
+  if (looksLikeUETag) {
+    return { type: "malformed", text: candidate };
+  }
+
+  return null;
+}
+
+function currentExistenceInterval(stack) {
+  let start = 0;
+  let end = Number.POSITIVE_INFINITY;
+
+  for (const frame of stack) {
+    if (frame.kind === "add") {
+      start = Math.max(start, frame.ue);
+    } else if (frame.phase === "del") {
+      end = Math.min(end, frame.ue);
+    } else {
+      start = Math.max(start, frame.ue);
+    }
+  }
+
+  return { start, end };
+}
+
+function intervalDescription(interval) {
+  if (Number.isFinite(interval.end)) {
+    return `UE ${interval.start} bis UE ${interval.end - 1}`;
+  }
+  return interval.start === 0 ? "Basis und alle UEs" : `ab UE ${interval.start}`;
+}
+
+function frameVisible(frame, ue) {
+  if (frame.kind === "add") return ue >= frame.ue;
+  return frame.phase === "del" ? ue < frame.ue : ue >= frame.ue;
+}
+
+function currentChangeKind(stack, ue) {
+  let kind = null;
+
+  for (const frame of stack) {
+    if (frame.kind === "add" && frame.ue === ue) {
+      kind = "add";
+    } else if (
+      frame.kind === "replace" &&
+      frame.phase === "add" &&
+      frame.ue === ue
+    ) {
+      // Intern unterscheiden wir Replace bereits von Add. Momentan verwenden
+      // beide absichtlich denselben grünen Gutter; später kann Replace leicht
+      // eine eigene Farbe bekommen.
+      kind = "replace";
+    }
+  }
+
+  return kind;
+}
+
+function preprocessForUE(source, ue) {
+  const sourceLines = source.split(/\r?\n/);
+  const renderedLines = [];
+  const renderedSourceLines = [];
+  const lineChangeKinds = [];
+  const stack = [];
+  let discoveredMaxUE = 0;
+
+  for (let index = 0; index < sourceLines.length; ++index) {
+    const lineNumber = index + 1;
+    const line = sourceLines[index];
+    const tag = parseUETag(line);
+
+    if (tag?.type === "malformed") {
+      throw new UEStructureError(
+        "Dieser Kommentar sieht wie ein UE-Tag aus, entspricht aber nicht der erwarteten Syntax.",
+        lineNumber,
+        null,
+        "Tags müssen allein in einer Zeile stehen, z. B. `<!-- begin UE:3 add -->`, `<!--@UE:3 begin del-->`, `<!--add-->` oder `<!--end-->`."
+      );
+    }
+
+    if (tag?.type === "begin") {
+      if (!Number.isInteger(tag.ue) || tag.ue < 1) {
+        throw new UEStructureError(
+          "Eine Unterrichtseinheit muss eine positive Nummer haben.",
+          lineNumber,
+          null,
+          "Die Basisversion hat implizit die Nummer 0; Tags beginnen deshalb mit UE 1."
+        );
+      }
+
+      const interval = currentExistenceInterval(stack);
+      if (tag.ue < interval.start || tag.ue >= interval.end) {
+        const enclosing = stack.at(-1);
+        throw new UEStructureError(
+          `UE ${tag.ue} liegt zeitlich außerhalb des umgebenden Inhalts (${intervalDescription(interval)}).`,
+          lineNumber,
+          enclosing?.beginLine ?? null,
+          "Eine verschachtelte Änderung darf erst stattfinden, wenn ihr umgebender Inhalt existiert, und nicht erst nachdem dieser bereits ersetzt wurde."
+        );
+      }
+
+      discoveredMaxUE = Math.max(discoveredMaxUE, tag.ue);
+      stack.push({
+        kind: tag.kind,
+        ue: tag.ue,
+        phase: tag.kind === "replace" ? "del" : "add",
+        beginLine: lineNumber,
+        separatorLine: null,
+      });
+      continue;
+    }
+
+    if (tag?.type === "replace-add") {
+      if (stack.length === 0) {
+        throw new UEStructureError(
+          "`<!--add-->` steht außerhalb eines Replace-Blocks.",
+          lineNumber,
+          null,
+          "Ein Replace-Block beginnt mit `<!--@UE:n begin del-->`, enthält genau ein `<!--add-->` und endet mit `<!--end-->`."
+        );
+      }
+
+      const frame = stack.at(-1);
+      if (frame.kind !== "replace") {
+        throw new UEStructureError(
+          "`<!--add-->` ist nur innerhalb eines Replace-Blocks erlaubt.",
+          lineNumber,
+          frame.beginLine,
+          `Der aktuell offene Block aus Zeile ${frame.beginLine} ist ein Add-Block.`
+        );
+      }
+
+      if (frame.phase === "add") {
+        throw new UEStructureError(
+          "Dieser Replace-Block enthält ein zweites `<!--add-->`.",
+          lineNumber,
+          frame.separatorLine,
+          "Ein Replace-Block darf nur einmal vom alten zum neuen Inhalt wechseln."
+        );
+      }
+
+      frame.phase = "add";
+      frame.separatorLine = lineNumber;
+      continue;
+    }
+
+    if (tag?.type === "end") {
+      if (stack.length === 0) {
+        throw new UEStructureError(
+          "`<!--end-->` hat keinen passenden geöffneten UE-Block.",
+          lineNumber,
+          null,
+          "Entferne das überzählige End-Tag oder ergänze den fehlenden Begin-Tag."
+        );
+      }
+
+      const frame = stack.pop();
+      if (frame.kind === "replace" && frame.phase === "del") {
+        throw new UEStructureError(
+          `Der Replace-Block für UE ${frame.ue} endet, bevor sein neuer Inhalt mit \`<!--add-->\` beginnt.`,
+          lineNumber,
+          frame.beginLine,
+          "Füge zwischen altem und neuem Inhalt ein `<!--add-->` ein."
+        );
+      }
+      continue;
+    }
+
+    const visible = stack.every(frame => frameVisible(frame, ue));
+    if (!visible) continue;
+
+    renderedLines.push(line);
+    renderedSourceLines.push(lineNumber);
+    lineChangeKinds.push(currentChangeKind(stack, ue));
+  }
+
+  if (stack.length > 0) {
+    const frame = stack.at(-1);
+    const replaceHint =
+      frame.kind === "replace" && frame.phase === "del"
+        ? " Außerdem fehlt in diesem Replace-Block noch `<!--add-->`."
+        : "";
+    throw new UEStructureError(
+      `Der in Zeile ${frame.beginLine} begonnene UE-${frame.ue}-${frame.kind === "add" ? "Add" : "Replace"}-Block wurde nicht beendet.`,
+      frame.beginLine,
+      null,
+      `Ergänze das passende \`<!--end-->\`.${replaceHint}`
+    );
+  }
+
+  return {
+    markdown: renderedLines.join("\n"),
+    sourceLines,
+    renderedLines,
+    renderedSourceLines,
+    lineChangeKinds,
+    maxUE: discoveredMaxUE,
+  };
+}
+
+function readUEFromUrl() {
+  try {
+    const raw = new URLSearchParams(window.location.search).get("ue");
+    if (raw === null || raw === "") return 0;
+    const value = Number.parseInt(raw, 10);
+    return Number.isInteger(value) && value >= 0 ? value : 0;
+  } catch (_) {
+    return 0;
+  }
+}
+
+function writeUEToUrl(ue) {
+  try {
+    const url = new URL(window.location.href);
+    url.searchParams.set("ue", String(ue));
+    window.history.replaceState(null, "", url);
+  } catch (_) {
+    // Der native Viewer kann eine URL verwenden, die History-Updates nicht
+    // unterstützt. Die Navigation selbst funktioniert trotzdem.
+  }
 }
 
 const cppKeywords = new Set([
@@ -71,36 +344,41 @@ function syntaxSpan(className, text) {
 }
 
 // Kleiner lexerbasierter Highlighter für die C++-/Arduino-Beispiele im Lernpfad.
-// Er will C++ nicht parsen, sondern nur stabile lexikalische Kategorien erkennen.
-function highlightCpp(source) {
+// Der Zustand von /* ... */ wird über Zeilengrenzen hinweg beibehalten, damit
+// wir jede Codezeile separat in einen UE-Gutter einhüllen können.
+function highlightCppLine(source, state) {
   let out = "";
   let i = 0;
 
   while (i < source.length) {
-    const rest = source.slice(i);
-
-    // UE-Markierungen stehen teilweise absichtlich innerhalb von Codeblöcken.
-    if (rest.startsWith("<!--")) {
-      const end = source.indexOf("-->", i + 4);
-      const stop = end === -1 ? source.length : end + 3;
-      out += syntaxSpan("syntax-comment", source.slice(i, stop));
-      i = stop;
+    if (state.blockComment) {
+      const end = source.indexOf("*/", i);
+      if (end === -1) {
+        out += syntaxSpan("syntax-comment", source.slice(i));
+        return out;
+      }
+      out += syntaxSpan("syntax-comment", source.slice(i, end + 2));
+      i = end + 2;
+      state.blockComment = false;
       continue;
     }
 
+    const rest = source.slice(i);
+
     if (rest.startsWith("//")) {
-      const end = source.indexOf("\n", i + 2);
-      const stop = end === -1 ? source.length : end;
-      out += syntaxSpan("syntax-comment", source.slice(i, stop));
-      i = stop;
-      continue;
+      out += syntaxSpan("syntax-comment", source.slice(i));
+      return out;
     }
 
     if (rest.startsWith("/*")) {
       const end = source.indexOf("*/", i + 2);
-      const stop = end === -1 ? source.length : end + 2;
-      out += syntaxSpan("syntax-comment", source.slice(i, stop));
-      i = stop;
+      if (end === -1) {
+        out += syntaxSpan("syntax-comment", source.slice(i));
+        state.blockComment = true;
+        return out;
+      }
+      out += syntaxSpan("syntax-comment", source.slice(i, end + 2));
+      i = end + 2;
       continue;
     }
 
@@ -164,6 +442,136 @@ function highlightCpp(source) {
   return out;
 }
 
+function highlightCpp(source) {
+  const state = { blockComment: false };
+  return source.split("\n").map(line => highlightCppLine(line, state)).join("\n");
+}
+
+function changeKindForRenderedRange(renderInfo, start, end) {
+  if (!renderInfo) return null;
+
+  let sawContent = false;
+  let kind = null;
+
+  for (let line = start; line < end; ++line) {
+    const text = renderInfo.renderedLines[line] ?? "";
+    if (!text.trim()) continue;
+
+    sawContent = true;
+    const lineKind = renderInfo.lineChangeKinds[line];
+    if (!lineKind) return null;
+    if (lineKind === "replace") kind = "replace";
+    else if (!kind) kind = "add";
+  }
+
+  return sawContent ? kind : null;
+}
+
+function addChangeAttributes(token, kind) {
+  token.attrJoin("class", "ue-current");
+  token.attrSet("data-ue-change", kind);
+}
+
+const markdown = window.markdownit({
+  html: true,
+  linkify: false,
+  typographer: false,
+  breaks: false,
+});
+
+// Markiert vollständig neue Markdown-Blöcke. Bei gemischten Strukturen
+// (z. B. eine bestehende Tabelle mit einer neuen Zeile) bleibt der äußere
+// Block unmarkiert; die kleineren, vollständig neuen Kind-Tokens werden markiert.
+markdown.core.ruler.push("ue-current-blocks", state => {
+  const renderInfo = state.env?.ueRenderInfo;
+  if (!renderInfo) return;
+
+  for (const token of state.tokens) {
+    if (!token.map || token.type === "fence" || token.type === "code_block") {
+      continue;
+    }
+
+    const kind = changeKindForRenderedRange(
+      renderInfo,
+      token.map[0],
+      token.map[1]
+    );
+    if (!kind) continue;
+
+    token.meta = { ...(token.meta || {}), ueChangeKind: kind };
+
+    if (token.nesting === 1 && token.tag) {
+      addChangeAttributes(token, kind);
+    } else if (token.type === "hr") {
+      addChangeAttributes(token, kind);
+    }
+  }
+});
+
+function codeSourceLineForToken(token, renderedLineOffset) {
+  if (!token.map) return null;
+  // Fenced code: map[0] ist die Zeile mit ```; der Inhalt beginnt danach.
+  // Indented code: map[0] zeigt bereits auf die erste Inhaltszeile.
+  return token.type === "fence"
+    ? token.map[0] + 1 + renderedLineOffset
+    : token.map[0] + renderedLineOffset;
+}
+
+function renderCodeToken(tokens, idx, options, env) {
+  const token = tokens[idx];
+  const renderInfo = env?.ueRenderInfo;
+  const language = token.type === "fence"
+    ? (token.info || "").trim().split(/\s+/)[0].toLowerCase()
+    : "";
+  const isCpp = cppLanguages.has(language);
+  const cppState = { blockComment: false };
+
+  // token.content endet bei Markdown-Codeblöcken normalerweise mit \n. Das
+  // abschließende leere Split-Element ist keine zusätzliche sichtbare Zeile.
+  let lines = token.content.split("\n");
+  if (lines.at(-1) === "") lines = lines.slice(0, -1);
+
+  const rendered = lines.map((line, offset) => {
+    const renderedLine = codeSourceLineForToken(token, offset);
+    const kind = renderedLine === null
+      ? null
+      : renderInfo?.lineChangeKinds[renderedLine] ?? null;
+    const sourceLine = renderedLine === null
+      ? null
+      : renderInfo?.renderedSourceLines[renderedLine] ?? null;
+    const classes = ["code-line"];
+    if (kind) classes.push("ue-current-line");
+    const attrs = [
+      `class="${classes.join(" ")}"`,
+      kind ? `data-ue-change="${kind}"` : "",
+      sourceLine ? `data-source-line="${sourceLine}"` : "",
+    ].filter(Boolean).join(" ");
+
+    const highlighted = isCpp
+      ? highlightCppLine(line, cppState)
+      : escapeHtml(line);
+    return `<span ${attrs}>${highlighted || "&#8203;"}</span>`;
+  }).join("\n");
+
+  const languageClass = language
+    ? ` class="language-${escapeHtml(language)}"`
+    : "";
+  return `<pre><code${languageClass}>${rendered}</code></pre>\n`;
+}
+
+markdown.renderer.rules.fence = renderCodeToken;
+markdown.renderer.rules.code_block = renderCodeToken;
+
+const defaultHtmlBlockRenderer = markdown.renderer.rules.html_block ||
+  ((tokens, idx) => tokens[idx].content);
+markdown.renderer.rules.html_block = (tokens, idx, options, env, self) => {
+  const token = tokens[idx];
+  const rendered = defaultHtmlBlockRenderer(tokens, idx, options, env, self);
+  const kind = token.meta?.ueChangeKind;
+  if (!kind) return rendered;
+  return `<div class="ue-current ue-current-html" data-ue-change="${kind}">${rendered}</div>`;
+};
+
 function enhanceAlerts(root) {
   const alertKinds = {
     IMPORTANT: { className: "alert-important", title: "Wichtig" },
@@ -225,15 +633,101 @@ function resolveEmbeddedResources(root) {
   }
 }
 
+function updateNavigation() {
+  ueLabel.textContent = selectedUE === 0 ? "Basis" : `UE ${selectedUE}`;
+  previousUEButton.disabled = selectedUE <= 0;
+  nextUEButton.disabled = selectedUE >= maxUE;
+  previousUEButton.title = selectedUE <= 0
+    ? "Bereits in der Basisversion"
+    : selectedUE === 1 ? "Zur Basisversion" : `Zu UE ${selectedUE - 1}`;
+  nextUEButton.title = selectedUE >= maxUE
+    ? "Bereits bei der letzten Unterrichtseinheit"
+    : `Zu UE ${selectedUE + 1}`;
+}
+
+function renderStructureError(error) {
+  const lines = sourceMarkdown.split(/\r?\n/);
+  const interesting = new Set([error.line, error.relatedLine].filter(Boolean));
+  const contextLineNumbers = new Set();
+
+  for (const line of interesting) {
+    for (let n = Math.max(1, line - 2); n <= Math.min(lines.length, line + 2); ++n) {
+      contextLineNumbers.add(n);
+    }
+  }
+
+  const ordered = [...contextLineNumbers].sort((a, b) => a - b);
+  let previous = null;
+  const context = [];
+  for (const lineNumber of ordered) {
+    if (previous !== null && lineNumber > previous + 1) {
+      context.push("      …");
+    }
+    const marker = interesting.has(lineNumber) ? ">" : " ";
+    context.push(
+      `${marker} ${String(lineNumber).padStart(4, " ")} | ${lines[lineNumber - 1] ?? ""}`
+    );
+    previous = lineNumber;
+  }
+
+  const related = error.relatedLine
+    ? `<p class="error-related">Zugehöriger geöffneter Block: Zeile ${error.relatedLine}.</p>`
+    : "";
+  const hint = error.hint
+    ? `<p><strong>Hinweis:</strong> ${escapeHtml(error.hint)}</p>`
+    : "";
+
+  content.innerHTML = `
+    <div class="error structure-error">
+      <strong>Fehler in der UE-Struktur – Zeile ${error.line}</strong>
+      <p>${escapeHtml(error.message)}</p>
+      ${related}
+      ${hint}
+      <pre class="error-context"><code>${escapeHtml(context.join("\n"))}</code></pre>
+    </div>`;
+  statusEl.textContent = "UE-Struktur fehlerhaft";
+}
+
+function renderSelectedUE() {
+  if (!sourceMarkdown) return;
+
+  try {
+    // Zuerst mit der gewünschten UE parsen. Dadurch kennen wir zugleich die
+    // höchste im Dokument vorkommende UE und validieren die gesamte Struktur.
+    let renderInfo = preprocessForUE(sourceMarkdown, selectedUE);
+    maxUE = renderInfo.maxUE;
+
+    const clampedUE = Math.max(0, Math.min(selectedUE, maxUE));
+    if (clampedUE !== selectedUE) {
+      selectedUE = clampedUE;
+      renderInfo = preprocessForUE(sourceMarkdown, selectedUE);
+    }
+
+    content.innerHTML = markdown.render(renderInfo.markdown, { ueRenderInfo: renderInfo });
+    enhanceAlerts(content);
+    resolveEmbeddedResources(content);
+    updateNavigation();
+    writeUEToUrl(selectedUE);
+    document.title = `MCT-Lernpfad – ${selectedUE === 0 ? "Basis" : `UE ${selectedUE}`}`;
+    statusEl.textContent = documentPath;
+  } catch (err) {
+    updateNavigation();
+    if (err instanceof UEStructureError) {
+      renderStructureError(err);
+      return;
+    }
+
+    content.innerHTML =
+      `<div class="error"><strong>Dokument konnte nicht gerendert werden.</strong><br>${escapeHtml(String(err))}</div>`;
+    statusEl.textContent = "Fehler";
+  }
+}
+
 async function loadDocument() {
   statusEl.textContent = "Lade …";
   try {
-    const md = await host.loadText(documentPath);
-    content.innerHTML = markdown.render(md);
-    enhanceAlerts(content);
-    resolveEmbeddedResources(content);
-    document.title = `MCT-Lernpfad – ${documentPath}`;
-    statusEl.textContent = documentPath;
+    sourceMarkdown = await host.loadText(documentPath);
+    renderSelectedUE();
   } catch (err) {
     content.innerHTML =
       `<div class="error"><strong>Dokument konnte nicht geladen werden.</strong><br>${escapeHtml(String(err))}</div>`;
@@ -241,5 +735,36 @@ async function loadDocument() {
   }
 }
 
+function selectUE(ue) {
+  const target = Math.max(0, Math.min(ue, maxUE));
+  if (target === selectedUE) return;
+  selectedUE = target;
+  renderSelectedUE();
+}
+
+previousUEButton.addEventListener("click", () => selectUE(selectedUE - 1));
+nextUEButton.addEventListener("click", () => selectUE(selectedUE + 1));
 reloadButton.addEventListener("click", loadDocument);
+
+document.addEventListener("keydown", event => {
+  if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
+    return;
+  }
+
+  const target = event.target;
+  if (target instanceof HTMLElement &&
+      (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName))) {
+    return;
+  }
+
+  if (event.key === "ArrowLeft" && selectedUE > 0) {
+    event.preventDefault();
+    selectUE(selectedUE - 1);
+  } else if (event.key === "ArrowRight" && selectedUE < maxUE) {
+    event.preventDefault();
+    selectUE(selectedUE + 1);
+  }
+});
+
+updateNavigation();
 loadDocument();

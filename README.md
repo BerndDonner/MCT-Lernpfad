@@ -140,3 +140,52 @@ Systemfonts zurück, wenn die Dateien fehlen.
 Das Markdown wird mit dem lokal vendorten `markdown-it` gerendert. Raw HTML bleibt
 absichtlich aktiviert, damit `<object>` und die interaktiven SVG-Diagramme
 funktionieren. Deshalb nur vertrauenswürdige Markdown-Dateien damit öffnen.
+
+## Unterrichtseinheiten
+
+Der Viewer kann den Lernpfad als zeitliche Folge von Unterrichtseinheiten
+anzeigen. Die Basisansicht enthält nur ungetaggten Inhalt; mit `‹` und `›` oder
+den Pfeiltasten wird durch `Basis`, `UE 1`, `UE 2`, ... geblättert. Die aktuelle
+Ansicht steht zusätzlich als `?ue=n` in der URL.
+
+Neue Inhalte werden mit einem schmalen grünen Gutter markiert. In Codeblöcken
+wird der Gutter zeilenweise gesetzt, so dass auch einzelne neu hinzugekommene
+Codezeilen in einem bereits bestehenden Beispiel sichtbar werden.
+
+Add-Blöcke können in beiden unterstützten Schreibweisen notiert werden:
+
+```text
+<!-- begin UE:3 add -->
+neuer Inhalt
+<!-- end -->
+```
+
+oder:
+
+```text
+<!--@UE:3 begin add-->
+neuer Inhalt
+<!--end-->
+```
+
+Ersetzungen verwenden einen alten und einen neuen Zweig:
+
+```text
+<!--@UE:7 begin del-->
+alter Inhalt
+<!--add-->
+neuer Inhalt
+<!--end-->
+```
+
+UE-Blöcke dürfen verschachtelt werden. Eine innere Änderung muss zeitlich in
+dem Bereich liegen, in dem ihr umgebender Inhalt existiert. Ein Inhalt, der erst
+in UE 5 entsteht, kann also nicht bereits in UE 3 verändert werden. Ebenso kann
+Inhalt im `del`-Zweig einer Ersetzung nicht erst nach der Ersetzung verändert
+werden.
+
+Die Steuertags stehen jeweils allein in einer Zeile. Sie funktionieren auch in
+Fenced-Codeblöcken, Tabellen, Listen und Blockquotes. Fehler wie fehlende
+`<!--end-->`-Tags, ein fehlendes `<!--add-->` in einem Replace-Block oder
+zeitlich unmögliche Verschachtelungen werden im Viewer mit Zeilennummer und
+Kontext angezeigt.
