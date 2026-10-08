@@ -111,8 +111,20 @@ button:disabled {
   line-height: 1;
 }
 
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: .2rem;
+  white-space: nowrap;
+}
+.zoom-controls button { min-width: 2rem; padding: .2rem .35rem; }
+#zoom-reset { min-width: 4rem; font-variant-numeric: tabular-nums; }
+
 .markdown-body {
   position: relative;
+  /* CSS zoom vergrößert das gesamte Layout, einschließlich eingebetteter SVGs.
+     Anders als transform: scale() berücksichtigt es den Platz im Dokumentfluss. */
+  zoom: var(--document-zoom, 1);
   width: min(1180px, calc(100% - 48px));
   margin: 0 auto;
   padding: 28px 0 80px;

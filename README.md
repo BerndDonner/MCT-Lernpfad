@@ -189,3 +189,16 @@ Fenced-Codeblöcken, Tabellen, Listen und Blockquotes. Fehler wie fehlende
 `<!--end-->`-Tags, ein fehlendes `<!--add-->` in einem Replace-Block oder
 zeitlich unmögliche Verschachtelungen werden im Viewer mit Zeilennummer und
 Kontext angezeigt.
+
+## Zoom für die Tafel
+
+Der Viewer vergrößert und verkleinert den **gesamten Dokumentinhalt**
+(Markdown, Code, Tabellen und eingebettete SVG-Diagramme). Die Toolbar
+bleibt gleich groß. Die Zoomstufen reichen von 75 % bis 300 %.
+
+- `Strg++` (bzw. `Strg+=`): vergrößern; `Strg+-`: verkleinern
+- `Strg+0`: auf 100 % zurücksetzen
+- Alternativ die Schaltflächen `−`, `100 %`, `+` in der Toolbar verwenden.
+
+Der Zoom bleibt beim Wechsel zwischen Unterrichtseinheiten erhalten.
+Er betrifft nur die Anzeige, nicht die Markdown- oder SVG-Dateien.

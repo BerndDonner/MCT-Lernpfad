@@ -9,6 +9,27 @@ const reloadButton = document.querySelector("#reload");
 const previousUEButton = document.querySelector("#previous-ue");
 const nextUEButton = document.querySelector("#next-ue");
 const ueLabel = document.querySelector("#ue-label");
+const zoomInButton = document.querySelector("#zoom-in");
+const zoomOutButton = document.querySelector("#zoom-out");
+const zoomResetButton = document.querySelector("#zoom-reset");
+
+const zoomLevels = [0.75, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.5, 3];
+let documentZoom = 1;
+
+function setDocumentZoom(level) {
+  documentZoom = level;
+  content.style.setProperty("--document-zoom", String(level));
+  zoomResetButton.textContent = `${Math.round(level * 100)} %`;
+  zoomOutButton.disabled = level === zoomLevels[0];
+  zoomInButton.disabled = level === zoomLevels.at(-1);
+  scheduleUEGutter(content);
+}
+
+function changeDocumentZoom(direction) {
+  const index = zoomLevels.indexOf(documentZoom);
+  setDocumentZoom(zoomLevels[Math.max(0, Math.min(zoomLevels.length - 1, index + direction))]);
+}
+
 
 const host = window.viewerHost;
 if (!host) {
@@ -636,8 +657,10 @@ function updateUEGutter(root) {
     if (rect.height <= 0 || rect.width <= 0) continue;
 
     ranges.push({
-      top: rect.top - rootRect.top,
-      bottom: rect.bottom - rootRect.top,
+      // getBoundingClientRect liefert gezoomte Bildschirmkoordinaten;
+      // CSS top/height des Markers erwarten ungezoomte Layoutkoordinaten.
+      top: (rect.top - rootRect.top) / documentZoom,
+      bottom: (rect.bottom - rootRect.top) / documentZoom,
     });
   }
 
@@ -810,6 +833,26 @@ content.addEventListener("load", () => scheduleUEGutter(content), true);
 previousUEButton.addEventListener("click", () => selectUE(selectedUE - 1));
 nextUEButton.addEventListener("click", () => selectUE(selectedUE + 1));
 reloadButton.addEventListener("click", loadDocument);
+zoomInButton.addEventListener("click", () => changeDocumentZoom(1));
+zoomOutButton.addEventListener("click", () => changeDocumentZoom(-1));
+zoomResetButton.addEventListener("click", () => setDocumentZoom(1));
+
+// Die native WebKitGTK-App bietet normalerweise keinen Browser-Zoom-Shortcut.
+// Im Browser werden dieselben Tastenkombinationen abgefangen, damit nur das
+// Dokument und nicht auch die Navigationsleiste vergrößert wird.
+document.addEventListener("keydown", event => {
+  if (!(event.ctrlKey || event.metaKey) || event.altKey || event.shiftKey && event.key !== "+") return;
+  if (event.key === "+" || event.key === "=" || event.code === "NumpadAdd") {
+    event.preventDefault();
+    changeDocumentZoom(1);
+  } else if (event.key === "-" || event.code === "NumpadSubtract") {
+    event.preventDefault();
+    changeDocumentZoom(-1);
+  } else if (event.key === "0") {
+    event.preventDefault();
+    setDocumentZoom(1);
+  }
+});
 
 document.addEventListener("keydown", event => {
   if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
