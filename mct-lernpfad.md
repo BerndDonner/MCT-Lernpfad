@@ -86,6 +86,64 @@ Serial.println(sizeof(a));          // 1 Bytes
 |`char`         |1                |alle ASCII-Zeichen
 |`bool`         |1                |true, false
 
+<!-- begin UE:3 add -->
+## Ganzzahlen mit Vorzeichen - Zweierkomplement
+
+### 8 Bit: `uint8_t` und `int8_t`
+
+|Bitmuster|`uint8_t`|`int8_t`|
+|:--------|---------:|-------:|
+|`0000 0000`|0|0|
+|`0000 0001`|1|1|
+|`0000 0010`|2|2|
+|`0000 0011`|3|3|
+|…|…|…|
+|`0111 1111`|127|127|
+|`1000 0000`|128|-128|
+|`1000 0001`|129|-127|
+|`1000 0010`|130|-126|
+|…|…|…|
+|`1111 1111`|255|-1|
+
+### 16 Bit: `uint16_t` und `int16_t`
+
+|Bitmuster|`uint16_t`|`int16_t`|
+|:--------|----------:|--------:|
+|`0000 0000 0000 0000`|0|0|
+|`0000 0000 0000 0001`|1|1|
+|`0000 0000 0000 0010`|2|2|
+|…|…|…|
+|`0111 1111 1111 1111`|32767|32767|
+|`1000 0000 0000 0000`|32768|-32768|
+|`1000 0000 0000 0001`|32769|-32767|
+|`1000 0000 0000 0010`|32770|-32766|
+|…|…|…|
+|`1111 1111 1111 1111`|65535|-1|
+
+Der wichtigste Zusammenhang lautet für alle Ganzzahltypen:
+
+```text
+-a = ~a + 1
+```
+### Überlauf bei vorzeichenlosen Zählern
+
+<object
+  data="diagrams/unsigned-overflow.svg"
+  type="image/svg+xml"
+  width="100%"
+  height="330">
+  Überlauf eines 8-Bit-Zählers
+</object>
+
+```cpp
+uint8_t start = 0xFF;
+uint8_t ende  = 0x03;
+
+uint8_t delta = static_cast<uint8_t>(ende - start); //delta ist 4, trotz Überlauf!!!
+```
+
+<!-- end -->
+
 ## Implizite und explizite Typkonvertierungen
 
 Zwischen den elementaren Datentypen erlaubt C/C++ leider sehr viele implizite
@@ -192,6 +250,35 @@ Alle vier Funktionen gibt es auch als Newline Variante mit ln (printlnHex)
 pinMode(2, INPUT_PULLUP);       //notwendig, um einen Taster an Pin 2 anzuschließen
 uint16_t rawX = analogRead(A0); //einlesen eines analogen Wertes (0-1023) vom Pin A0
 ```
+<!-- end -->
+
+<!-- begin UE:3 add -->
+## Bitoperationen
+
+<object
+  data="diagrams/bitoperationen-masken.svg"
+  type="image/svg+xml"
+  width="100%"
+  height="760">
+  Bitoperationen mit Masken
+</object>
+
+Der Operator `~` invertiert jedes Bit.
+
+Kurzschreibweise:
+
+```cpp
+value += mask;  //value = value + mask;
+value /= mask;  //value = value / mask;
+value &= mask;  //value = value & mask;
+value |= mask;  //value = value | mask;
+value ^= mask;  //value = value ^ mask;
+```
+
+> [!WARNING]
+> Verwechseln Sie die **Bitoperatoren** `~`, `&`, `|`, `^` nicht mit den
+> **logischen Operatoren** `!`, `&&`, `||`.
+
 <!-- end -->
 
 # Mikrocontroller
