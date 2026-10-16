@@ -1,4 +1,5 @@
 #include <gtk/gtk.h>
+#include <gio/gio.h>
 #include <jsc/jsc.h>
 #include <webkit/webkit.h>
 
@@ -67,6 +68,129 @@ on_load_text(WebKitUserContentManager *manager,
   return TRUE;
 }
 
+// Bilddateien werden für das offline nutzbare Markdown-ZIP auch binär
+// benötigt (PNG/JPEG). SVG und CSS können weiterhin loadText benutzen.
+static gboolean
+on_load_binary(WebKitUserContentManager *manager,
+               JSCValue *value,
+               WebKitScriptMessageReply *reply,
+               gpointer user_data)
+{
+  (void)manager;
+  ViewerState *state = user_data;
+  if (!jsc_value_is_string(value)) {
+    webkit_script_message_reply_return_error_message(reply, "Dateipfad erwartet.");
+    return TRUE;
+  }
+  g_autofree gchar *requested = jsc_value_to_string(value);
+  if (g_path_is_absolute(requested)) {
+    webkit_script_message_reply_return_error_message(reply, "Absolute Pfade sind nicht erlaubt.");
+    return TRUE;
+  }
+  g_autofree gchar *full_path = g_canonicalize_filename(requested, state->project_root);
+  if (!path_is_inside_root(state->project_root, full_path)) {
+    webkit_script_message_reply_return_error_message(reply, "Datei liegt außerhalb des Projekts.");
+    return TRUE;
+  }
+  g_autofree gchar *contents = NULL;
+  gsize length = 0;
+  g_autoptr(GError) error = NULL;
+  if (!g_file_get_contents(full_path, &contents, &length, &error)) {
+    webkit_script_message_reply_return_error_message(reply, error->message);
+    return TRUE;
+  }
+  g_autofree gchar *encoded = g_base64_encode((const guchar *)contents, length);
+  JSCValue *result = jsc_value_new_string(jsc_value_get_context(value), encoded);
+  webkit_script_message_reply_return_value(reply, result);
+  g_object_unref(result);
+  return TRUE;
+}
+
+typedef struct {
+  WebKitScriptMessageReply *reply;
+  JSCContext *context;
+  GBytes *data;
+} ArchiveSave;
+
+static void
+archive_save_free(ArchiveSave *request)
+{
+  g_bytes_unref(request->data);
+  g_object_unref(request->context);
+  webkit_script_message_reply_unref(request->reply);
+  g_free(request);
+}
+
+static void
+on_archive_save_response(GtkNativeDialog *dialog, gint response, gpointer user_data)
+{
+  ArchiveSave *request = user_data;
+  if (response == GTK_RESPONSE_ACCEPT) {
+    g_autoptr(GFile) file = gtk_file_chooser_get_file(GTK_FILE_CHOOSER(dialog));
+    gsize length = 0;
+    const gchar *data = g_bytes_get_data(request->data, &length);
+    g_autoptr(GError) error = NULL;
+    if (file && g_file_replace_contents(file, data, length, NULL, FALSE,
+                                         G_FILE_CREATE_NONE, NULL, NULL, &error)) {
+      JSCValue *result = jsc_value_new_boolean(request->context, TRUE);
+      webkit_script_message_reply_return_value(request->reply, result);
+      g_object_unref(result);
+    } else {
+      webkit_script_message_reply_return_error_message(
+        request->reply, error ? error->message : "Kein Ziel ausgewählt.");
+    }
+  } else {
+    webkit_script_message_reply_return_error_message(request->reply, "Speichern abgebrochen.");
+  }
+  g_object_unref(dialog);
+  archive_save_free(request);
+}
+
+static gboolean
+on_save_archive(WebKitUserContentManager *manager,
+                JSCValue *value,
+                WebKitScriptMessageReply *reply,
+                gpointer user_data)
+{
+  (void)manager;
+  GtkWindow *window = user_data;
+  if (!jsc_value_is_string(value)) {
+    webkit_script_message_reply_return_error_message(reply, "ZIP-Nutzdaten fehlen.");
+    return TRUE;
+  }
+  g_autofree gchar *payload = jsc_value_to_string(value);
+  gchar *separator = strchr(payload, '\n');
+  if (!separator) {
+    webkit_script_message_reply_return_error_message(reply, "Ungültige ZIP-Nutzdaten.");
+    return TRUE;
+  }
+  *separator = '\0';
+  if (!*payload || strchr(payload, '/') || strchr(payload, '\\') ||
+      !g_str_has_suffix(payload, ".zip")) {
+    webkit_script_message_reply_return_error_message(reply, "Ungültiger ZIP-Dateiname.");
+    return TRUE;
+  }
+  gsize length = 0;
+  guchar *decoded = g_base64_decode(separator + 1, &length);
+  if (!decoded || length < 22) {
+    g_free(decoded);
+    webkit_script_message_reply_return_error_message(reply, "ZIP-Archiv ist leer oder beschädigt.");
+    return TRUE;
+  }
+  ArchiveSave *request = g_new0(ArchiveSave, 1);
+  request->reply = webkit_script_message_reply_ref(reply);
+  request->context = g_object_ref(jsc_value_get_context(value));
+  request->data = g_bytes_new_take(decoded, length);
+
+  GtkFileChooserNative *dialog = gtk_file_chooser_native_new(
+    "Markdown-ZIP exportieren", window, GTK_FILE_CHOOSER_ACTION_SAVE,
+    "_Speichern", "_Abbrechen");
+  gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), payload);
+  g_signal_connect(dialog, "response", G_CALLBACK(on_archive_save_response), request);
+  gtk_native_dialog_show(GTK_NATIVE_DIALOG(dialog));
+  return TRUE;
+}
+
 static gchar *
 project_base_uri(const gchar *project_root)
 {
@@ -113,10 +237,21 @@ activate(GtkApplication *app, gpointer user_data)
   g_signal_connect(manager,
                    "script-message-with-reply-received::viewerLoadText",
                    G_CALLBACK(on_load_text), state);
+  g_signal_connect(manager,
+                   "script-message-with-reply-received::viewerLoadBinary",
+                   G_CALLBACK(on_load_binary), state);
 
   if (!webkit_user_content_manager_register_script_message_handler_with_reply(
         manager, "viewerLoadText", NULL)) {
     g_printerr("WebKit Message-Handler konnte nicht registriert werden.\n");
+    g_object_unref(manager);
+    g_application_quit(G_APPLICATION(app));
+    return;
+  }
+
+  if (!webkit_user_content_manager_register_script_message_handler_with_reply(
+        manager, "viewerLoadBinary", NULL)) {
+    g_printerr("Binary-Handler konnte nicht registriert werden.\n");
     g_object_unref(manager);
     g_application_quit(G_APPLICATION(app));
     return;
@@ -148,6 +283,16 @@ activate(GtkApplication *app, gpointer user_data)
   gtk_window_set_title(GTK_WINDOW(window), "MCT-Lernpfad");
   gtk_window_set_default_size(GTK_WINDOW(window), 1280, 900);
   gtk_window_set_child(GTK_WINDOW(window), web_view);
+  g_signal_connect(manager,
+                   "script-message-with-reply-received::viewerSaveArchive",
+                   G_CALLBACK(on_save_archive), window);
+  if (!webkit_user_content_manager_register_script_message_handler_with_reply(
+        manager, "viewerSaveArchive", NULL)) {
+    g_printerr("Save-Handler konnte nicht registriert werden.\n");
+    gtk_window_destroy(GTK_WINDOW(window));
+    g_application_quit(G_APPLICATION(app));
+    return;
+  }
 
   g_autofree gchar *index_path =
     g_build_filename(state->shell_dir, "index.html", NULL);

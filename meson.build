@@ -28,6 +28,7 @@ viewer_data_dir = join_paths(get_option('datadir'), 'mct-lernpfad-viewer')
 install_data(
   'index.html',
   'viewer.js',
+  'viewer-export.js',
   'viewer.css',
   install_dir: viewer_data_dir,
 )

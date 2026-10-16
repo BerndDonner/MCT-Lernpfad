@@ -105,6 +105,33 @@ Standardmäßig wird `mct-lernpfad.md` geladen. Ein anderes Dokument kann über
 http://127.0.0.1:8765/?doc=demo-interaktiv.md
 ```
 
+## Aktuelle UE nach VS Code exportieren
+
+Mit **Export ZIP** in der Toolbar wird die *ausgewählte* Unterrichtseinheit
+(`Basis`, `UE 1` usw.) exportiert – nicht nur der sichtbare Scroll-Ausschnitt.
+Das Archiv enthält eine Markdown-Datei und die dazugehörigen lokalen Bilder.
+Nach dem Entpacken kann die `.md`-Datei direkt in der normalen Markdown-Vorschau
+von VS Code angezeigt werden (keine Viewer-Erweiterung nötig).
+
+- Add-/Replace-UE-Tags werden entsprechend der Auswahl aufgelöst und entfernt.
+- `<object data="...svg">` wird in gewöhnliche Markdown-Bilder umgewandelt.
+- SVG-Stylesheets (`@import url("diagram-theme.css")`) werden eingebettet;
+  externe Fonts werden nicht mitkopiert, stattdessen werden Schrift-Fallbacks
+  verwendet. SVGs bleiben skalierbar.
+- Bei interaktiven SVGs wird der **momentan angezeigte Zustand** als statisches
+  SVG gespeichert. Skripte werden entfernt. Kann der Host nicht auf das
+  tatsächlich dargestellte SVG zugreifen, schlägt der Export mit einer
+  Meldung fehl, statt einen falschen Snapshot zu exportieren.
+- Markdown-Bilder (`![...](...)`) werden mit ihren lokalen Dateien verpackt.
+  Entfernte Web-Bilder bleiben externe Referenzen. Komplexes HTML, SVGs mit
+  weiteren externen Ressourcen sowie Dateien außerhalb des Dokumentordners
+  sind nicht allgemein exportierbar und führen zu einer Fehlermeldung.
+
+Im Browser wird das ZIP heruntergeladen, unter GTK/WebKitGTK öffnet sich ein
+nativer Speicherdialog. Die gemeinsame Exportlogik liegt in `viewer-export.js`.
+Für ZIP wird kein zusätzliches JavaScript-Paket benötigt; die Dateien werden
+unkomprimiert in einem standardkonformen ZIP-Archiv (STORE) gespeichert.
+
 ## SVG-Diagramme einbetten
 
 Die Diagramme werden grundsätzlich als `<object>` eingebettet:

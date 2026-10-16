@@ -24,6 +24,24 @@ if (!window.viewerHost) {
       return response.text();
     },
 
+    async loadBinary(path) {
+      const response = await fetch(new URL(path, projectBaseUrl), { cache: "no-store" });
+      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+      return new Uint8Array(await response.arrayBuffer());
+    },
+
+    async saveArchive(filename, bytes) {
+      const url = URL.createObjectURL(new Blob([bytes], { type: "application/zip" }));
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.append(link);
+      link.click();
+      link.remove();
+      // Der Browser übernimmt die Daten asynchron nach dem Klick.
+      setTimeout(() => URL.revokeObjectURL(url), 60_000);
+    },
+
     resolveUrl(path) {
       return new URL(path, projectBaseUrl).href;
     }
