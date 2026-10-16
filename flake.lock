@@ -114,11 +114,11 @@
         "steel": "steel"
       },
       "locked": {
-        "lastModified": 1790449452,
-        "narHash": "sha256-QYUMI/C5PugvEI9QlpMiGdNB55SYVHbNluPAqTyMODI=",
+        "lastModified": 1792144363,
+        "narHash": "sha256-PQ+sNz4THR1j+CBreS9j2vVKOVPggXt8qG9v31vSjsg=",
         "owner": "BerndDonner",
         "repo": "NixOS-Config",
-        "rev": "ddfeac88dc45d9bf8d221d3f1f8ac3c1ce11dede",
+        "rev": "5bddf537d9a611a42d3f103221f704c28a1d16c3",
         "type": "github"
       },
       "original": {
