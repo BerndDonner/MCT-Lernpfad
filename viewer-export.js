@@ -190,6 +190,27 @@ function parseSvg(source, filename) {
   return svg.documentElement;
 }
 
+// Die Diagramme sind für hellen Hintergrund gestaltet. Als <object> kann das
+// transparente SVG auf der Viewer-Fläche liegen; als Markdown-Bild zeigt VS Code
+// im Dark Mode sonst dunkelgraue Schrift auf dunkelgrauem Hintergrund.
+// Ein Hintergrund-Rechteck macht jedes exportierte SVG unabhängig vom Theme.
+// Es wird als erstes Element eingefügt und überdeckt deshalb keine Grafik.
+function addSvgExportBackground(svg, path) {
+  const viewBox = svg.getAttribute("viewBox");
+  const values = viewBox?.trim().split(/[\s,]+/).map(Number);
+  if (!values || values.length !== 4 || values.some(v => !Number.isFinite(v)) ||
+      values[2] <= 0 || values[3] <= 0) {
+    throw new Error(`SVG ohne gültige viewBox: ${path}`);
+  }
+  const background = svg.ownerDocument.createElementNS(svg.namespaceURI, "rect");
+  background.setAttribute("x", String(values[0]));
+  background.setAttribute("y", String(values[1]));
+  background.setAttribute("width", String(values[2]));
+  background.setAttribute("height", String(values[3]));
+  background.setAttribute("style", "fill: #ffffff; stroke: none");
+  svg.insertBefore(background, svg.firstChild);
+}
+
 // Ein Export-SVG enthält weder Skripte noch externe Stylesheets. Die im
 // Lernpfad genutzte gemeinsame CSS-Datei wird direkt eingebettet.
 async function snapshotSvg(path, liveObject, originalSource) {
@@ -238,6 +259,7 @@ async function snapshotSvg(path, liveObject, originalSource) {
       throw new Error(`Externe SVG-Bildreferenz wird nicht unterstützt: ${path} → ${href}`);
     }
   }
+  addSvgExportBackground(svg, path);
   return new XMLSerializer().serializeToString(svg);
 }
 

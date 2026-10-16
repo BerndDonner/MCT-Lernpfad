@@ -117,7 +117,9 @@ von VS Code angezeigt werden (keine Viewer-Erweiterung nötig).
 - `<object data="...svg">` wird in gewöhnliche Markdown-Bilder umgewandelt.
 - SVG-Stylesheets (`@import url("diagram-theme.css")`) werden eingebettet;
   externe Fonts werden nicht mitkopiert, stattdessen werden Schrift-Fallbacks
-  verwendet. SVGs bleiben skalierbar.
+  verwendet. SVGs bleiben skalierbar. Für dunkle Markdown-Vorschauen erhält
+  jedes exportierte SVG einen deckend weißen Hintergrund; die Original-SVGs
+  und ihre Darstellung im Viewer bleiben unverändert.
 - Bei interaktiven SVGs wird der **momentan angezeigte Zustand** als statisches
   SVG gespeichert. Skripte werden entfernt. Kann der Host nicht auf das
   tatsächlich dargestellte SVG zugreifen, schlägt der Export mit einer
