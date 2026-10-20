@@ -1,0 +1,41 @@
+{
+  "repositories": {
+    "E3A": "/home/bernd/GitHub/NixOS-Bunny/repos/MCT_E3A",
+    "I3A": "/home/bernd/GitHub/NixOS-Bunny/repos/MCT_I3A"
+  },
+  "diagrams": {
+    "bitoperationen-masken.svg": {
+      "E3A": [
+        "donner/00_mct-lernpfad/diagrams/bitoperationen-masken.svg",
+        "donner/03_uebungen/diagrams/bitoperationen-masken.svg"
+      ],
+      "I3A": [
+        "donner/02_uebungen/diagrams/bitoperationen-masken.svg"
+      ]
+    },
+    "daten-intern-extern.svg": {
+      "E3A": [
+        "donner/00_mct-lernpfad/diagrams/daten-intern-extern.svg"
+      ]
+    },
+    "microcontroller-modell.svg": {
+      "E3A": [
+        "donner/00_mct-lernpfad/diagrams/microcontroller-modell.svg"
+      ]
+    },
+    "setup-loop.svg": {
+      "E3A": [
+        "donner/00_mct-lernpfad/diagrams/setup-loop.svg"
+      ]
+    },
+    "unsigned-overflow.svg": {
+      "E3A": [
+        "donner/00_mct-lernpfad/diagrams/unsigned-overflow.svg",
+        "donner/03_uebungen/diagrams/unsigned-overflow.svg"
+      ],
+      "I3A": [
+        "donner/02_uebungen/diagrams/unsigned-overflow.svg"
+      ]
+    }
+  }
+}

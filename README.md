@@ -130,9 +130,15 @@ von VS Code angezeigt werden (keine Viewer-Erweiterung nötig).
   sind nicht allgemein exportierbar und führen zu einer Fehlermeldung.
 
 Im Browser wird das ZIP heruntergeladen, unter GTK/WebKitGTK öffnet sich ein
-nativer Speicherdialog. Die gemeinsame Exportlogik liegt in `viewer-export.js`.
+nativer Speicherdialog. Die UE-Exportlogik liegt in `export/viewer-export.js`.
 Für ZIP wird kein zusätzliches JavaScript-Paket benötigt; die Dateien werden
 unkomprimiert in einem standardkonformen ZIP-Archiv (STORE) gespeichert.
+
+Der vom UE-Export unabhängige **Batch-Export aller statischen SVG-Diagramme**
+sowie deren Verteilung in die Kurs-Repositories liegt unter `export/`.
+Aufruf, Zuordnungstabelle, `--check` und das interaktive `--fix` sind in
+[`export/README.md`](export/README.md) beschrieben. Interaktive SVGs werden
+beim Batch-Export bewusst ausgelassen.
 
 ## SVG-Diagramme einbetten
 

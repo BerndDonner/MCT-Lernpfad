@@ -1,2 +1,4 @@
 result
-
+/export/diagrams/
+__pycache__/
+*.pyc
