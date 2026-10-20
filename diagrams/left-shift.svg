@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="675" viewBox="0 0 1280 675" role="img" aria-labelledby="svg-title svg-desc">
+  <title id="svg-title">Bit Shift nach links – interaktives uint8_t-Beispiel</title>
+  <desc id="svg-desc">Bits einer vorzeichenlosen 8-Bit-Zahl durch Klicken ändern. Shift-Wert durch Klick erhöhen und durch Shift-Klick verringern. Herausfallende Bits sind rot und durchgestrichen, erhaltene Bits schwarz und neue Nullen grün. Code und Dezimalrechnung werden synchron aktualisiert.</desc>
+  <style>@import url("diagram-theme.css");
+:root { color-scheme: light; }
+svg { background: #ffffff; font-family: "MCT Inter", Inter, system-ui, sans-serif; }
+text { fill: #1f2328; }
+.title { font-family: "MCT Inter", Inter, system-ui, sans-serif; font-size: 26px; font-weight: 700; }
+.help { font-size: 17px; fill: #57606a; }
+.bg { fill: #ffffff; }
+.surface { fill: #f6f8fa; stroke: #d0d7de; stroke-width: 1.5; }
+.math-surface { fill: #ffffff; stroke: #d0d7de; stroke-width: 1.5; }
+.code-text { font: 500 29px "MCT JetBrains Mono", "JetBrains Mono", "DejaVu Sans Mono", monospace; }
+.bit-text { font: 600 36px "MCT JetBrains Mono", "JetBrains Mono", "DejaVu Sans Mono", monospace; pointer-events: none; }
+.operator { font: 600 35px "MCT JetBrains Mono", "JetBrains Mono", "DejaVu Sans Mono", monospace; fill: #57606a; }
+.column-label { font-size: 19px; font-weight: 600; }
+.math-main { font-size: 26px; font-weight: 500; }
+.math-note { font-size: 18px; fill: #57606a; }
+.color-a, .bit-input { fill: #1f6feb; }
+.color-shift { fill: #9a6700; }
+.bit-old { fill: #1f2328; }
+.bit-new { fill: #1a7f37; }
+.bit-lost { fill: #cf222e; }
+.strike { stroke: #cf222e; stroke-width: 2.8; stroke-linecap: round; }
+.click-bit { cursor: pointer; outline: none; }
+.click-bit > rect { fill: transparent; stroke: transparent; stroke-width: 1.5; rx: 6; }
+.click-bit:hover > rect, .click-bit:focus > rect { fill: #dbeafe; stroke: #80b3ff; }
+.click-shift { cursor: pointer; outline: none; }
+.click-shift > rect { fill: #fff7e7; stroke: #f1c779; stroke-width: 1.5; rx: 8; }
+.click-shift:hover > rect, .click-shift:focus > rect { fill: #ffe6b3; stroke: #bd7600; }
+.help-hint { fill: #57606a; font-size: 15px; }
+</style>
+  <rect width="1280" height="675" class="bg"/>
+  <text class="title" x="65" y="54">Bit Shift nach links</text>
+  <text class="help" x="65" y="83">Bit anklicken: 0 ↔ 1   ·   Shift anklicken: +1   ·   Shift+Klick: −1</text>
+
+  <!-- C++: Hexadezimalzahlen, nur der Binärbereich ist interaktiv. -->
+  <rect class="surface" x="65" y="111" width="1150" height="132" rx="13"/>
+  <text class="code-text" x="96" y="164" xml:space="preserve"><tspan>uint8_t </tspan><tspan class="color-a">a</tspan><tspan> = </tspan><tspan class="color-a" id="code-input">0xCA</tspan><tspan>;</tspan></text>
+  <text class="code-text" x="96" y="211" xml:space="preserve"><tspan class="color-a">a</tspan><tspan> = </tspan><tspan class="color-a">a</tspan><tspan> &lt;&lt; </tspan><tspan class="color-shift" id="code-shift">2</tspan><tspan>;  </tspan><tspan style="fill:#57606a">// </tspan><tspan class="color-a">a</tspan><tspan style="fill:#57606a"> = </tspan><tspan id="code-result" style="fill:#57606a">0x28</tspan></text>
+
+  <!-- Interaktive Bit-Zeile: n+8 Bits rechtsbündig im Ergebnis, immer in Vierergruppen von rechts. -->
+  <rect class="surface" x="65" y="263" width="1150" height="175" rx="13"/>
+  <text id="result-heading" class="column-label" x="408" y="310" text-anchor="middle">Ergebnis</text>
+  <text id="input-heading" class="column-label color-a" x="771" y="310" text-anchor="middle">a</text>
+  <text id="shift-heading" class="column-label color-shift" x="1048" y="310" text-anchor="middle">shift</text>
+  <g id="result-bits">
+    <text class="bit-text bit-lost" x="281.5" y="370" text-anchor="middle">1</text>
+<line class="strike" x1="271.5" y1="356" x2="291.5" y2="356"/>
+<text class="bit-text bit-lost" x="308.5" y="370" text-anchor="middle">1</text>
+<line class="strike" x1="298.5" y1="356" x2="318.5" y2="356"/>
+<text class="bit-text bit-old" x="347.5" y="370" text-anchor="middle">0</text>
+<text class="bit-text bit-old" x="374.5" y="370" text-anchor="middle">0</text>
+<text class="bit-text bit-old" x="401.5" y="370" text-anchor="middle">1</text>
+<text class="bit-text bit-old" x="428.5" y="370" text-anchor="middle">0</text>
+<text class="bit-text bit-old" x="467.5" y="370" text-anchor="middle">1</text>
+<text class="bit-text bit-old" x="494.5" y="370" text-anchor="middle">0</text>
+<text class="bit-text bit-new" x="521.5" y="370" text-anchor="middle">0</text>
+<text class="bit-text bit-new" x="548.5" y="370" text-anchor="middle">0</text>
+  </g>
+  <text class="operator" x="602" y="371" text-anchor="middle">=</text>
+  <g id="input-bits">
+    <g class="click-bit" role="button" tabindex="0" data-bit="0" aria-label="Bit 7: 1, klicken zum Umschalten"><title>Bit 7 umschalten</title><rect x="655.5" y="331" width="26" height="51"/><text class="bit-text bit-input" x="668.5" y="370" text-anchor="middle">1</text></g>
+<g class="click-bit" role="button" tabindex="0" data-bit="1" aria-label="Bit 6: 1, klicken zum Umschalten"><title>Bit 6 umschalten</title><rect x="682.5" y="331" width="26" height="51"/><text class="bit-text bit-input" x="695.5" y="370" text-anchor="middle">1</text></g>
+<g class="click-bit" role="button" tabindex="0" data-bit="2" aria-label="Bit 5: 0, klicken zum Umschalten"><title>Bit 5 umschalten</title><rect x="709.5" y="331" width="26" height="51"/><text class="bit-text bit-input" x="722.5" y="370" text-anchor="middle">0</text></g>
+<g class="click-bit" role="button" tabindex="0" data-bit="3" aria-label="Bit 4: 0, klicken zum Umschalten"><title>Bit 4 umschalten</title><rect x="736.5" y="331" width="26" height="51"/><text class="bit-text bit-input" x="749.5" y="370" text-anchor="middle">0</text></g>
+<g class="click-bit" role="button" tabindex="0" data-bit="4" aria-label="Bit 3: 1, klicken zum Umschalten"><title>Bit 3 umschalten</title><rect x="775.5" y="331" width="26" height="51"/><text class="bit-text bit-input" x="788.5" y="370" text-anchor="middle">1</text></g>
+<g class="click-bit" role="button" tabindex="0" data-bit="5" aria-label="Bit 2: 0, klicken zum Umschalten"><title>Bit 2 umschalten</title><rect x="802.5" y="331" width="26" height="51"/><text class="bit-text bit-input" x="815.5" y="370" text-anchor="middle">0</text></g>
+<g class="click-bit" role="button" tabindex="0" data-bit="6" aria-label="Bit 1: 1, klicken zum Umschalten"><title>Bit 1 umschalten</title><rect x="829.5" y="331" width="26" height="51"/><text class="bit-text bit-input" x="842.5" y="370" text-anchor="middle">1</text></g>
+<g class="click-bit" role="button" tabindex="0" data-bit="7" aria-label="Bit 0: 0, klicken zum Umschalten"><title>Bit 0 umschalten</title><rect x="856.5" y="331" width="26" height="51"/><text class="bit-text bit-input" x="869.5" y="370" text-anchor="middle">0</text></g>
+  </g>
+  <text class="operator" x="948" y="371" text-anchor="middle">&lt;&lt;</text>
+  <g class="click-shift" id="shift-control" role="button" tabindex="0" aria-label="Shift 2. Klick erhöht, Shift-Klick verringert">
+    <title>Shift erhöhen; Shift+Klick verringern</title>
+    <rect x="1019" y="328" width="58" height="58"/>
+    <text id="shift-value" class="bit-text color-shift" x="1048" y="371" text-anchor="middle">2</text>
+  </g>
+
+  <!-- Mathematische Beziehung: ausschließlich Dezimalwerte, Exponent wirklich hochgestellt. -->
+  <rect class="math-surface" x="65" y="458" width="1150" height="177" rx="13"/>
+  <text class="math-main" x="96" y="514" xml:space="preserve"><tspan>Mathematisch: </tspan><tspan class="color-a" id="math-input">202</tspan><tspan> · 2</tspan><tspan id="math-exponent" class="color-shift" style="font-size:18px" dy="-13">2</tspan><tspan dy="13"> = </tspan><tspan id="math-result">808</tspan></text>
+  <text class="math-main" x="96" y="557" xml:space="preserve"><tspan>Als </tspan><tspan style="font-family:'MCT JetBrains Mono','JetBrains Mono',monospace">uint8_t</tspan><tspan> bleibt: </tspan><tspan id="math-byte">40</tspan></text>
+  <text id="math-note" class="math-note" x="96" y="604">Oben gehen gesetzte Bits verloren; im uint8_t bleiben nur die unteren 8 Bits.</text>
+
+  <script><![CDATA[
+    (() => {
+      "use strict";
+      const NS = "http://www.w3.org/2000/svg";
+      const CELL = 27, GAP = 12, RESULT_RIGHT = 562, INPUT_LEFT = 655, BIT_Y = 370;
+      let value = 0xCA;
+      let shift = 2;
+      const byId = id => document.getElementById(id);
+      const make = (type, attributes, text) => {
+        const element = document.createElementNS(NS, type);
+        for (const [name, entry] of Object.entries(attributes)) element.setAttribute(name, String(entry));
+        if (text !== undefined) element.textContent = text;
+        return element;
+      };
+      const bitWidth = n => n * CELL + Math.floor((n - 1) / 4) * GAP;
+      const toHex = number => `0x${number.toString(16).toUpperCase().padStart(2, "0")}`;
+
+      function renderBits(container, bitString, startX, isResult) {
+        container.replaceChildren();
+        let gapOffset = 0;
+        const n = bitString.length;
+        for (let i = 0; i < n; i++) {
+          if (i > 0 && (n - i) % 4 === 0) gapOffset += GAP;
+          const x = startX + i * CELL + gapOffset + CELL / 2;
+          let clazz = "bit-input";
+          if (isResult) clazz = i < shift ? "bit-lost" : i >= 8 ? "bit-new" : "bit-old";
+          const bit = make("text", {
+            x, y: BIT_Y, "text-anchor": "middle", class: `bit-text ${clazz}`
+          }, bitString[i]);
+          if (isResult) {
+            container.appendChild(bit);
+            if (i < shift) container.appendChild(make("line", {
+              x1: x - 10, x2: x + 10, y1: BIT_Y - 14, y2: BIT_Y - 14, class: "strike"
+            }));
+          } else {
+            const pos = 7 - i;
+            const group = make("g", {
+              class: "click-bit", role: "button", tabindex: "0", "data-bit": i,
+              "aria-label": `Bit ${pos}: ${bitString[i]}; klicken zum Umschalten`
+            });
+            group.appendChild(make("title", {}, `Bit ${pos} umschalten`));
+            group.appendChild(make("rect", {x: x - 13, y: BIT_Y - 39, width: 26, height: 51}));
+            group.appendChild(bit);
+            group.addEventListener("click", () => {
+              value ^= (1 << pos);
+              render();
+            });
+            group.addEventListener("keydown", evt => {
+              if (evt.key === "Enter" || evt.key === " ") {
+                evt.preventDefault();
+                value ^= (1 << pos);
+                render();
+              }
+            });
+            container.appendChild(group);
+          }
+        }
+      }
+
+      function render() {
+        const bits = value.toString(2).padStart(8, "0");
+        const shifted = bits + "0".repeat(shift);
+        const shiftedValue = value * 2 ** shift;
+        const byte = shiftedValue & 0xFF;
+        const lostOnes = (shiftedValue >>> 8) !== 0;
+        const resultStart = RESULT_RIGHT - bitWidth(8 + shift);
+
+        renderBits(byId("result-bits"), shifted, resultStart, true);
+        renderBits(byId("input-bits"), bits, INPUT_LEFT, false);
+        byId("result-heading").setAttribute("x", resultStart + bitWidth(8 + shift) / 2);
+        byId("code-input").textContent = toHex(value);
+        byId("code-shift").textContent = String(shift);
+        byId("code-result").textContent = toHex(byte);
+        byId("shift-value").textContent = String(shift);
+        byId("shift-control").setAttribute("aria-label", `Shift ${shift}. Klick erhöht, Shift-Klick verringert`);
+        byId("math-input").textContent = String(value);
+        byId("math-exponent").textContent = String(shift);
+        byId("math-result").textContent = String(shiftedValue);
+        byId("math-byte").textContent = String(byte);
+        const note = byId("math-note");
+        note.textContent = lostOnes
+          ? "Oben gehen gesetzte Bits verloren; im uint8_t bleiben nur die unteren 8 Bits."
+          : "Keine 1 geht verloren: Das uint8_t-Ergebnis entspricht der Multiplikation.";
+      }
+
+      const control = byId("shift-control");
+      const changeShift = evt => {
+        const amount = evt.shiftKey ? -1 : 1;
+        shift = Math.max(0, Math.min(8, shift + amount));
+        render();
+      };
+      control.addEventListener("click", changeShift);
+      control.addEventListener("keydown", evt => {
+        if (evt.key === "Enter" || evt.key === " ") {
+          evt.preventDefault();
+          changeShift(evt);
+        }
+      });
+      render();
+    })();
+  ]]></script>
+</svg>

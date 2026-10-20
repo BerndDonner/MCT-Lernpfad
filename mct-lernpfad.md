@@ -35,7 +35,7 @@
 > - arbeiten nur im eigenen Branch und im eigenen Verzeichnis.
 > - am Ende der Stunde einen commit aller Änderungen und ein push
 
-<!-- begin UE:4 add -->
+<!-- begin UE:5 add -->
 ## Worktrees und Commits
 
 <object
@@ -167,9 +167,27 @@ Serial.println(static_cast<uint8_t>(c), BIN); // 1000001
 Wir erkennen Funktionen an dem Muster: Text unmittelbar gefolgt von einer
 runden Klammer auf.
 
+<!-- begin UE:3 add -->
+Eigene Funktionen können genauso erstellt werden. Damit eigene Funktionen
+ausgeführt werden müssen diese allerding explizit aufgerufen werden.
+Funktionen sind hervorragend dazu geeignet ein Programm in logische Einheiten
+zu zerlegen.
+<!-- end -->
+
+
 ```cpp
-void setup() {          // setup ist eine Funktion
-  Serial.begin(115200); // begin ist eine Funktion
+<!-- begin UE:3 add -->
+void ausgabe() {                  // Definition einer eigenen Funktionen
+  Serial.println("Hallo Welt!");
+}
+
+
+<!-- end -->
+void setup() {                    // setup ist eine Funktion
+  Serial.begin(115200);           // begin ist eine Funktion
+<!-- begin UE:3 add -->
+  ausgabe();                      // Aufruf der eigenen Funktion
+<!-- end -->
 }
 ```
 
@@ -280,6 +298,17 @@ value ^= mask;  //value = value ^ mask;
 > **logischen Operatoren** `!`, `&&`, `||`.
 
 <!-- end -->
+
+<!-- begin UE:4 add -->
+<object
+  data="diagrams/left-shift.svg"
+  type="image/svg+xml"
+  width="100%"
+  height="760">
+  Left Shift
+</object>
+<!-- end -->
+
 
 # Mikrocontroller
 
