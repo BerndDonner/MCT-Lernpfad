@@ -5,11 +5,6 @@
     .op { font-family: &quot;MCT JetBrains Mono&quot;, &quot;JetBrains Mono&quot;, monospace; font-size: 30px; font-weight: 700; }
     .bits { font-family: &quot;MCT JetBrains Mono&quot;, &quot;JetBrains Mono&quot;, monospace; font-size: 30px; font-weight: 600; letter-spacing: 2px; }
     .caption { font-size: 17px; }
-    .mask-and { fill: #dbeafe; }
-    .mask-or { fill: #fee2e2; }
-    .mask-xor { fill: #fef3c7; }
-    .result { fill: #eaf7ea; stroke: #79b879; stroke-width: 1.5px; rx: 8px; ry: 8px; }
-    .rule { stroke: #8c959f; stroke-width: 2px; }
   </style>
   <title id="title1">Bitoperationen mit Masken</title>
   <desc id="desc1">Beispiele für bitweises UND, ODER und XOR. UND kann Bits ausschalten, ODER einschalten und XOR umschalten.</desc>
@@ -22,12 +17,13 @@
     <text x="235" y="118" text-anchor="end" class="label-strong" id="text4">Wert</text>
     <text x="270" y="118" class="bits" id="text5">1011 0110</text>
     <text x="235" y="158" text-anchor="end" class="label-strong" id="text6">Maske</text>
-    <rect x="263" y="128" width="267" height="39" class="mask-and" rx="7" ry="7" id="rect6" />
+    <rect x="263" y="128" width="267" height="39" class="diagram-mask-and" rx="7" ry="7" id="rect6" />
     <text x="270" y="158" class="bits" id="text7">1111 0000</text>
     <text x="555" y="158" class="op" id="text8">&amp;</text>
-    <line x1="265" y1="173" x2="532" y2="173" class="rule" id="line8" />
+    <line x1="265" y1="173" x2="532" y2="173" class="diagram-mask-rule" id="line8" />
     <text x="650" y="138" class="caption" id="text9">0 in der Maske → Ergebnisbit wird 0</text>
     <text x="650" y="165" class="caption" id="text10">1 in der Maske → ursprüngliches Bit bleibt erhalten</text>
+    <rect x="263" y="177" width="204" height="39" rx="8" ry="8" class="diagram-result-highlight" />
     <text x="270" y="208" class="bits" id="text11">1011 0000</text>
   </g>
   <!-- OR -->
@@ -38,12 +34,13 @@
     <text x="235" y="118" text-anchor="end" class="label-strong" id="text14">Wert</text>
     <text x="270" y="118" class="bits" id="text15">1011 0110</text>
     <text x="235" y="158" text-anchor="end" class="label-strong" id="text16">Maske</text>
-    <rect x="263" y="128" width="267" height="39" class="mask-or" rx="7" ry="7" id="rect16" />
+    <rect x="263" y="128" width="267" height="39" class="diagram-mask-or" rx="7" ry="7" id="rect16" />
     <text x="270" y="158" class="bits" id="text17">1111 0000</text>
     <text x="555" y="158" class="op" id="text18">|</text>
-    <line x1="265" y1="173" x2="532" y2="173" class="rule" id="line18" />
+    <line x1="265" y1="173" x2="532" y2="173" class="diagram-mask-rule" id="line18" />
     <text x="650" y="138" class="caption" id="text19">1 in der Maske → Ergebnisbit wird 1</text>
     <text x="650" y="165" class="caption" id="text20">0 in der Maske → ursprüngliches Bit bleibt erhalten</text>
+    <rect x="263" y="177" width="204" height="39" rx="8" ry="8" class="diagram-result-highlight" />
     <text x="270" y="208" class="bits" id="text21">1111 0110</text>
   </g>
   <!-- XOR -->
@@ -54,12 +51,13 @@
     <text x="235" y="118" text-anchor="end" class="label-strong" id="text24">Wert</text>
     <text x="270" y="118" class="bits" id="text25">1011 0110</text>
     <text x="235" y="158" text-anchor="end" class="label-strong" id="text26">Maske</text>
-    <rect x="263" y="128" width="267" height="39" class="mask-xor" rx="7" ry="7" id="rect26" />
+    <rect x="263" y="128" width="267" height="39" class="diagram-mask-xor" rx="7" ry="7" id="rect26" />
     <text x="270" y="158" class="bits" id="text27">1111 0000</text>
     <text x="555" y="158" class="op" id="text28">^</text>
-    <line x1="265" y1="173" x2="532" y2="173" class="rule" id="line28" />
+    <line x1="265" y1="173" x2="532" y2="173" class="diagram-mask-rule" id="line28" />
     <text x="650" y="138" class="caption" id="text29">1 in der Maske → 0 wird 1 und 1 wird 0</text>
     <text x="650" y="165" class="caption" id="text30">0 in der Maske → ursprüngliches Bit bleibt erhalten</text>
+    <rect x="263" y="177" width="204" height="39" rx="8" ry="8" class="diagram-result-highlight" />
     <text x="270" y="208" class="bits" id="text31">0100 0110</text>
   </g>
   <metadata id="metadata1">

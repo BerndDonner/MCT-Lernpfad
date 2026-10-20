@@ -121,3 +121,36 @@ text {
 .table-row-alt {
   fill: #ffffff;
 }
+
+/* Gemeinsame Farben für Bitoperationen und interaktive Diagramme.
+   Farbwerte stehen bewusst hier statt in den SVGs (auch für SVG-Exporter). */
+.diagram-bg { fill: #ffffff; }
+.diagram-surface { fill: #f6f8fa; stroke: #d0d7de; stroke-width: 1.5px; }
+.diagram-surface-white { fill: #ffffff; stroke: #d0d7de; stroke-width: 1.5px; }
+.diagram-muted { fill: #57606a; }
+.diagram-a { fill: #1f6feb; }
+.diagram-shift { fill: #9a6700; }
+.diagram-bit-old { fill: #1f2328; }
+.diagram-bit-new { fill: #1a7f37; }
+.diagram-bit-lost { fill: #cf222e; }
+.diagram-strike { stroke: #cf222e; stroke-width: 2.8; stroke-linecap: round; }
+.diagram-result-highlight { fill: #eaf7ea; stroke: #79b879; stroke-width: 1.5px; }
+.diagram-result-text { fill: #1f2328; }
+
+/* Hervorhebung interaktiver Werte nur bei Hover oder Tastaturfokus. */
+.diagram-click-bit, .diagram-click-shift { cursor: pointer; outline: none; }
+.diagram-click-bit > rect, .diagram-click-shift > rect {
+  fill: transparent; stroke: transparent; stroke-width: 1.5px;
+}
+.diagram-click-bit:hover > rect, .diagram-click-bit:focus-visible > rect {
+  fill: #dbeafe; stroke: #80b3ff;
+}
+.diagram-click-shift:hover > rect, .diagram-click-shift:focus-visible > rect {
+  fill: #ffe6b3; stroke: #bd7600;
+}
+
+/* Maskenhintergründe aus bitoperationen-masken.svg. */
+.diagram-mask-and { fill: #dbeafe; }
+.diagram-mask-or { fill: #fee2e2; }
+.diagram-mask-xor { fill: #fef3c7; }
+.diagram-mask-rule { stroke: #8c959f; stroke-width: 2px; }
