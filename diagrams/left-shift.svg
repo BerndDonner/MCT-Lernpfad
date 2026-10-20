@@ -21,8 +21,10 @@ svg { font-family: "MCT Inter", Inter, system-ui, sans-serif; }
   <!-- C++: Hexadezimalzahlen, nur der Binärbereich ist interaktiv. -->
   <rect class="diagram-surface" x="65" y="111" width="1150" height="132" rx="13"/>
   <text class="code-text" x="96" y="164" xml:space="preserve"><tspan>uint8_t </tspan><tspan>a</tspan><tspan> = </tspan><tspan class="diagram-a" id="code-input">0xCA</tspan><tspan>;</tspan></text>
-  <rect id="code-result-highlight" class="diagram-result-highlight" x="428" y="177" width="84" height="42" rx="6" ry="6"/>
-  <text class="code-text" x="96" y="211" xml:space="preserve"><tspan>a</tspan><tspan> = </tspan><tspan>a</tspan><tspan> &lt;&lt; </tspan><tspan class="diagram-shift" id="code-shift">2</tspan><tspan>;  </tspan><tspan class="diagram-muted">// </tspan><tspan>a</tspan><tspan class="diagram-muted"> = </tspan><tspan id="code-result" class="diagram-result-text">0x28</tspan></text>
+  <!-- Ergebniszahl als eigenes Text-Element: WebKitGTK misst <tspan> sonst teilweise als ganze Zeile. -->
+  <text id="code-result-prefix" class="code-text" x="96" y="211" xml:space="preserve"><tspan>a</tspan><tspan> = </tspan><tspan>a</tspan><tspan> &lt;&lt; </tspan><tspan class="diagram-shift" id="code-shift">2</tspan><tspan>;  </tspan><tspan class="diagram-muted">// </tspan><tspan>a</tspan><tspan class="diagram-muted"> = </tspan></text>
+  <rect id="code-result-highlight" class="diagram-result-highlight" x="490" y="177" width="84" height="42" rx="6" ry="6"/>
+  <text id="code-result" class="code-text diagram-result-text" x="498" y="211">0x28</text>
 
   <!-- Interaktive Bit-Zeile: n+8 Bits rechtsbündig im Ergebnis, immer in Vierergruppen von rechts. -->
   <rect class="diagram-surface" x="65" y="263" width="1150" height="175" rx="13"/>
@@ -66,8 +68,9 @@ svg { font-family: "MCT Inter", Inter, system-ui, sans-serif; }
   <!-- Mathematische Beziehung: ausschließlich Dezimalwerte, Exponent wirklich hochgestellt. -->
   <rect class="diagram-surface-white" x="65" y="458" width="1150" height="177" rx="13"/>
   <text class="math-main" x="96" y="514" xml:space="preserve"><tspan>Mathematisch: </tspan><tspan class="diagram-a" id="math-input">202</tspan><tspan> · 2</tspan><tspan id="math-exponent" class="diagram-shift" style="font-size:18px" dy="-13">2</tspan><tspan dy="13"> = </tspan><tspan id="math-result">808</tspan></text>
-  <rect id="math-byte-highlight" class="diagram-result-highlight" x="338" y="526" width="56" height="42" rx="6" ry="6"/>
-  <text class="math-main" x="96" y="557" xml:space="preserve"><tspan>Als </tspan><tspan style="font-family:'MCT JetBrains Mono','JetBrains Mono',monospace">uint8_t</tspan><tspan> bleibt: </tspan><tspan id="math-byte" class="diagram-result-text" dx="8">40</tspan></text>
+  <text id="math-byte-prefix" class="math-main" x="96" y="557" xml:space="preserve"><tspan>Als </tspan><tspan style="font-family:'MCT JetBrains Mono','JetBrains Mono',monospace">uint8_t</tspan><tspan> bleibt: </tspan></text>
+  <rect id="math-byte-highlight" class="diagram-result-highlight" x="370" y="526" width="56" height="42" rx="6" ry="6"/>
+  <text id="math-byte" class="math-main diagram-result-text" x="378" y="557">40</text>
   <text id="math-note" class="math-note diagram-muted" x="96" y="604">Oben gehen gesetzte Bits verloren; im uint8_t bleiben nur die unteren 8 Bits.</text>
 
   <script><![CDATA[
@@ -94,6 +97,12 @@ svg { font-family: "MCT Inter", Inter, system-ui, sans-serif; }
         rect.setAttribute("height", bbox.height + 2 * verticalPadding);
       }
       const updateHighlights = () => {
+        // Nur eigenständige SVG-<text>-Elemente messen, keine <tspan>-Elemente.
+        // Der Prefix besitzt xml:space="preserve", damit das abschließende Leerzeichen zählt.
+        const codePrefix = byId("code-result-prefix");
+        byId("code-result").setAttribute("x", Number(codePrefix.getAttribute("x")) + codePrefix.getComputedTextLength() + 9);
+        const mathPrefix = byId("math-byte-prefix");
+        byId("math-byte").setAttribute("x", Number(mathPrefix.getAttribute("x")) + mathPrefix.getComputedTextLength() + 9);
         highlightText("code-result", "code-result-highlight");
         highlightText("math-byte", "math-byte-highlight", 6, 5);
       };
