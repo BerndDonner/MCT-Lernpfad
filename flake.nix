@@ -13,7 +13,7 @@
         inherit system;
       };
 
-      cDev = import (nixos-config + "/lib/c-develop.nix");
+      cDev = nixos-config.lib.mkCDevShell;
 
       markdownItVersion = "15.0.2";
       markdownItTarball = pkgs.fetchurl {
