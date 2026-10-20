@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="675" viewBox="0 0 1280 675" role="img" aria-labelledby="svg-title svg-desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="675" viewBox="0 0 1280 675" zoomAndPan="disable" role="img" aria-labelledby="svg-title svg-desc">
   <title id="svg-title">Bit Shift nach links – interaktives uint8_t-Beispiel</title>
   <desc id="svg-desc">Bits einer vorzeichenlosen 8-Bit-Zahl durch Klicken ändern. Shift-Wert durch Klick erhöhen und durch Shift-Klick verringern. Herausfallende Bits sind rot und durchgestrichen, erhaltene Bits schwarz und neue Nullen grün. Code und Dezimalrechnung werden synchron aktualisiert.</desc>
   <style>@import url("diagram-theme.css");

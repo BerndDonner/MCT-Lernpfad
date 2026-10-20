@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg"
-     width="1280" height="760" viewBox="0 0 1280 760">
+     width="1280" height="760" viewBox="0 0 1280 760" zoomAndPan="disable">
   <title>Git Commit Snapshot und Dateidiff – Zweispaltig</title>
   <desc>
     Linksklick zeigt den Snapshot eines Commits.

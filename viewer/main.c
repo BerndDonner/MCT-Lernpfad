@@ -233,6 +233,29 @@ activate(GtkApplication *app, gpointer user_data)
 {
   ViewerState *state = user_data;
 
+  // Diagnosemodus: SVG unmittelbar in WebKitGTK laden, ohne Markdown-Viewer,
+  // <object>-Einbettung, Zoom- oder Export-JavaScript.
+  if (g_str_has_suffix(state->document_name, ".svg")) {
+    g_autofree gchar *svg_path =
+      g_build_filename(state->project_root, state->document_name, NULL);
+    g_autoptr(GError) error = NULL;
+    g_autofree gchar *svg_uri = g_filename_to_uri(svg_path, NULL, &error);
+    if (!svg_uri) {
+      g_printerr("SVG-Pfad kann nicht geöffnet werden: %s\n", error->message);
+      g_application_quit(G_APPLICATION(app));
+      return;
+    }
+
+    GtkWidget *window = gtk_application_window_new(app);
+    gtk_window_set_title(GTK_WINDOW(window), "MCT-Lernpfad – SVG-Test");
+    gtk_window_set_default_size(GTK_WINDOW(window), 1280, 900);
+    GtkWidget *web_view = webkit_web_view_new();
+    gtk_window_set_child(GTK_WINDOW(window), web_view);
+    webkit_web_view_load_uri(WEBKIT_WEB_VIEW(web_view), svg_uri);
+    gtk_window_present(GTK_WINDOW(window));
+    return;
+  }
+
   WebKitUserContentManager *manager = webkit_user_content_manager_new();
   g_signal_connect(manager,
                    "script-message-with-reply-received::viewerLoadText",
@@ -333,14 +356,18 @@ init_state(ViewerState *state, int argc, char **argv)
     g_canonicalize_filename(document_arg, NULL);
 
   if (!g_file_test(document_path, G_FILE_TEST_IS_REGULAR)) {
-    g_printerr("Markdown-Datei nicht gefunden: %s\n", document_path);
+    g_printerr("Datei nicht gefunden: %s\n", document_path);
     return FALSE;
   }
 
   state->project_root = g_path_get_dirname(document_path);
   state->document_name = g_path_get_basename(document_path);
-  state->shell_dir = find_shell_dir();
 
+  // Für den reinen SVG-Test ist keine HTML-/Markdown-Shell erforderlich.
+  if (g_str_has_suffix(state->document_name, ".svg"))
+    return TRUE;
+
+  state->shell_dir = find_shell_dir();
   if (!state->shell_dir) {
     g_printerr(
       "Viewer-Shell nicht gefunden. Starte aus dem Repo-Root oder setze "
