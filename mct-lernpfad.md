@@ -307,6 +307,14 @@ value ^= mask;  //value = value ^ mask;
   height="760">
   Left Shift
 </object>
+
+<object
+  data="diagrams/right-shift.svg"
+  type="image/svg+xml"
+  width="100%"
+  height="760">
+  Right Shift
+</object>
 <!-- end -->
 
 

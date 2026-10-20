@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="675" viewBox="0 0 1280 675" zoomAndPan="disable" role="img" aria-labelledby="svg-title svg-desc">
+  <title id="svg-title">Bit Shift nach rechts – interaktives uint8_t-Beispiel</title>
+  <desc id="svg-desc">Bits einer vorzeichenlosen 8-Bit-Zahl durch Klicken ändern. Shift-Wert durch Klick erhöhen und durch Shift-Klick verringern. Neue Nullen links sind grün, erhaltene Bits schwarz und rechts herausgeschobene Bits rot und durchgestrichen. Code, Bitdarstellung und ganzzahlige Division mit Rest werden synchron aktualisiert.</desc>
+  <style>@import url("diagram-theme.css");
+:root { color-scheme: light; }
+svg { font-family: "MCT Inter", Inter, system-ui, sans-serif; }
+.title { font-family: "MCT Inter", Inter, system-ui, sans-serif; font-size: 26px; font-weight: 700; }
+.help { font-size: 17px; }
+.code-text { font: 500 29px "MCT JetBrains Mono", "JetBrains Mono", "DejaVu Sans Mono", monospace; }
+.bit-text { font: 600 36px "MCT JetBrains Mono", "JetBrains Mono", "DejaVu Sans Mono", monospace; pointer-events: none; }
+.operator { font: 600 35px "MCT JetBrains Mono", "JetBrains Mono", "DejaVu Sans Mono", monospace; }
+.column-label { font-size: 19px; font-weight: 600; }
+.math-main { font-size: 26px; font-weight: 500; }
+.math-note { font-size: 18px; }
+</style>
+  <rect width="1280" height="675" class="diagram-bg"/>
+  <text class="title" x="65" y="54">Bit Shift nach rechts</text>
+  <text class="help diagram-muted" x="65" y="83">Bit anklicken: 0 ↔ 1   ·   Shift anklicken: +1   ·   Shift+Klick: −1</text>
+
+  <rect class="diagram-surface" x="65" y="111" width="1150" height="132" rx="13"/>
+  <text class="code-text" x="96" y="164" xml:space="preserve"><tspan>uint8_t </tspan><tspan>a</tspan><tspan> = </tspan><tspan class="diagram-a" id="code-input">0xCA</tspan><tspan>;</tspan></text>
+  <text id="code-result-prefix" class="code-text" x="96" y="211" xml:space="preserve"><tspan>a</tspan><tspan> = </tspan><tspan>a</tspan><tspan> &gt;&gt; </tspan><tspan class="diagram-shift" id="code-shift">2</tspan><tspan>;  </tspan><tspan class="diagram-muted">// </tspan><tspan>a</tspan><tspan class="diagram-muted"> = </tspan></text>
+  <rect id="code-result-highlight" class="diagram-result-highlight" x="490" y="177" width="84" height="42" rx="6" ry="6"/>
+  <text id="code-result" class="code-text diagram-result-text" x="498" y="211">0x32</text>
+
+  <rect class="diagram-surface" x="65" y="263" width="1150" height="175" rx="13"/>
+  <text id="result-heading" class="column-label" x="420" y="310" text-anchor="middle">Ergebnis</text>
+  <text id="input-heading" class="column-label diagram-a" x="821" y="310" text-anchor="middle">a</text>
+  <text id="shift-heading" class="column-label diagram-shift" x="1098" y="310" text-anchor="middle">shift</text>
+  <rect id="byte-bits-highlight" class="diagram-result-highlight" x="260" y="330" width="244" height="54" rx="8" ry="8"/>
+  <g id="result-bits"></g>
+  <text class="operator diagram-muted" x="655" y="371" text-anchor="middle">=</text>
+  <g id="input-bits"></g>
+  <text class="operator diagram-muted" x="998" y="371" text-anchor="middle">&gt;&gt;</text>
+  <g class="diagram-click-shift" id="shift-control" role="button" tabindex="0" aria-label="Shift 2. Klick erhöht, Shift-Klick verringert">
+    <title>Shift erhöhen; Shift+Klick verringern</title>
+    <rect x="1069" y="328" width="58" height="58" rx="8" ry="8"/>
+    <text id="shift-value" class="bit-text diagram-shift" x="1098" y="371" text-anchor="middle">2</text>
+  </g>
+
+  <rect class="diagram-surface-white" x="65" y="458" width="1150" height="177" rx="13"/>
+  <text id="math-prefix" class="math-main" x="96" y="514" xml:space="preserve"><tspan>Mathematisch: </tspan><tspan class="diagram-a" id="math-input">202</tspan><tspan> / 2</tspan><tspan id="math-exponent" class="diagram-shift" style="font-size:18px" dy="-13">2</tspan><tspan dy="13"> = </tspan></text>
+  <rect id="math-quotient-highlight" class="diagram-result-highlight" x="395" y="483" width="52" height="42" rx="6" ry="6"/>
+  <text id="math-quotient" class="math-main diagram-result-text" x="403" y="514">50</text>
+  <text id="math-remainder" class="math-main" x="458" y="514" xml:space="preserve"> Rest 2</text>
+  <text class="math-note diagram-muted" x="96" y="557">Der gespeicherte uint8_t-Wert ist der ganzzahlige Quotient.</text>
+  <text id="math-note" class="math-note diagram-muted" x="96" y="604">Die rechts herausgeschobenen Bits bilden den Rest.</text>
+
+  <script><![CDATA[
+    (() => {
+      "use strict";
+      const NS = "http://www.w3.org/2000/svg";
+      const CELL = 27, GAP = 12, RESULT_LEFT = 240, INPUT_LEFT = 705, BIT_Y = 370, LOST_EXTRA_GAP = 18;
+      let value = 0xCA;
+      let shift = 2;
+      const byId = id => document.getElementById(id);
+      const make = (type, attributes, text) => {
+        const element = document.createElementNS(NS, type);
+        for (const [name, entry] of Object.entries(attributes)) element.setAttribute(name, String(entry));
+        if (text !== undefined) element.textContent = text;
+        return element;
+      };
+      const bitWidth = n => n > 0 ? n * CELL + Math.floor((n - 1) / 4) * GAP : 0;
+      function highlightText(textId, backgroundId, horizontalPadding = 8, verticalPadding = 5) {
+        const rect = byId(backgroundId);
+        const bbox = byId(textId).getBBox();
+        rect.setAttribute("x", bbox.x - horizontalPadding);
+        rect.setAttribute("y", bbox.y - verticalPadding);
+        rect.setAttribute("width", bbox.width + 2 * horizontalPadding);
+        rect.setAttribute("height", bbox.height + 2 * verticalPadding);
+      }
+      const updateHighlights = () => {
+        const codePrefix = byId("code-result-prefix");
+        byId("code-result").setAttribute("x", Number(codePrefix.getAttribute("x")) + codePrefix.getComputedTextLength() + 9);
+        const mathPrefix = byId("math-prefix");
+        byId("math-quotient").setAttribute("x", Number(mathPrefix.getAttribute("x")) + mathPrefix.getComputedTextLength() + 9);
+        highlightText("code-result", "code-result-highlight");
+        highlightText("math-quotient", "math-quotient-highlight", 6, 5);
+        const q = byId("math-quotient");
+        const rem = byId("math-remainder");
+        rem.setAttribute("x", Number(q.getAttribute("x")) + q.getComputedTextLength() + 6);
+      };
+      const toHex = number => `0x${number.toString(16).toUpperCase().padStart(2, "0")}`;
+
+      function renderInputBits(bits) {
+        const container = byId("input-bits");
+        container.replaceChildren();
+        let gapOffset = 0;
+        for (let i = 0; i < 8; i++) {
+          if (i > 0 && (8 - i) % 4 === 0) gapOffset += GAP;
+          const x = INPUT_LEFT + i * CELL + gapOffset + CELL / 2;
+          const pos = 7 - i;
+          const group = make("g", {
+            class: "diagram-click-bit", role: "button", tabindex: "0", "data-bit": i,
+            "aria-label": `Bit ${pos}: ${bits[i]}; klicken zum Umschalten`
+          });
+          group.appendChild(make("title", {}, `Bit ${pos} umschalten`));
+          group.appendChild(make("rect", {x: x - 13, y: BIT_Y - 39, width: 26, height: 51, rx: 6, ry: 6}));
+          group.appendChild(make("text", {
+            x, y: BIT_Y, "text-anchor": "middle", class: "bit-text diagram-a"
+          }, bits[i]));
+          group.addEventListener("click", () => {
+            value ^= (1 << pos);
+            render();
+          });
+          group.addEventListener("keydown", evt => {
+            if (evt.key === "Enter" || evt.key === " ") {
+              evt.preventDefault();
+              value ^= (1 << pos);
+              render();
+            }
+          });
+          container.appendChild(group);
+        }
+      }
+
+      function renderResultBits(bits, shift) {
+        const resultBits = shift === 0 ? bits : bits.slice(0, 8 - shift);
+        const lostBits = shift === 0 ? "" : bits.slice(8 - shift);
+        const resultString = "0".repeat(shift) + resultBits;
+        const resultWidth = bitWidth(8);
+        const lostWidth = bitWidth(shift);
+        const separator = shift > 0 ? LOST_EXTRA_GAP : 0;
+        const totalWidth = resultWidth + separator + lostWidth;
+        const startX = RESULT_LEFT + Math.max(0, (340 - totalWidth) / 2);
+        const container = byId("result-bits");
+        container.replaceChildren();
+
+        let gapOffset = 0;
+        for (let i = 0; i < 8; i++) {
+          if (i > 0 && (8 - i) % 4 === 0) gapOffset += GAP;
+          const x = startX + i * CELL + gapOffset + CELL / 2;
+          let clazz = "diagram-bit-old";
+          if (i < shift) clazz = "diagram-bit-new";
+          const bit = make("text", {x, y: BIT_Y, "text-anchor": "middle", class: `bit-text ${clazz}`}, resultString[i]);
+          container.appendChild(bit);
+        }
+
+        gapOffset = 0;
+        for (let i = 0; i < shift; i++) {
+          if (i > 0 && (shift - i) % 4 === 0) gapOffset += GAP;
+          const x = startX + resultWidth + separator + i * CELL + gapOffset + CELL / 2;
+          const bit = make("text", {x, y: BIT_Y, "text-anchor": "middle", class: "bit-text diagram-bit-lost"}, lostBits[i]);
+          container.appendChild(bit);
+          container.appendChild(make("line", {
+            x1: x - 10, x2: x + 10, y1: BIT_Y - 14, y2: BIT_Y - 14, class: "diagram-strike"
+          }));
+        }
+
+        byId("result-heading").setAttribute("x", startX + totalWidth / 2);
+        const hl = byId("byte-bits-highlight");
+        hl.setAttribute("x", String(startX - 8));
+        hl.setAttribute("width", String(resultWidth + 16));
+      }
+
+      function render() {
+        const bits = value.toString(2).padStart(8, "0");
+        const quotient = value >> shift;
+        const divisor = 2 ** shift;
+        const remainder = shift === 0 ? 0 : value % divisor;
+        renderResultBits(bits, shift);
+        renderInputBits(bits);
+        byId("code-input").textContent = toHex(value);
+        byId("code-shift").textContent = String(shift);
+        byId("code-result").textContent = toHex(quotient);
+        byId("shift-value").textContent = String(shift);
+        byId("shift-control").setAttribute("aria-label", `Shift ${shift}. Klick erhöht, Shift-Klick verringert`);
+        byId("math-input").textContent = String(value);
+        byId("math-exponent").textContent = String(shift);
+        byId("math-quotient").textContent = String(quotient);
+        byId("math-remainder").textContent = ` Rest ${remainder}`;
+        updateHighlights();
+        const note = byId("math-note");
+        note.textContent = shift === 0
+          ? "Es wird nicht verschoben: Es geht kein Bit verloren und der Rest ist 0."
+          : remainder === 0
+            ? "Es gehen zwar Bits nach rechts hinaus, hier ist der Rest aber 0."
+            : "Die rechts herausgeschobenen Bits bilden den Rest.";
+      }
+
+      const control = byId("shift-control");
+      const changeShift = evt => {
+        const amount = evt.shiftKey ? -1 : 1;
+        shift = Math.max(0, Math.min(8, shift + amount));
+        render();
+      };
+      control.addEventListener("click", changeShift);
+      control.addEventListener("keydown", evt => {
+        if (evt.key === "Enter" || evt.key === " ") {
+          evt.preventDefault();
+          changeShift(evt);
+        }
+      });
+      render();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(updateHighlights);
+    })();
+  ]]></script>
+</svg>
