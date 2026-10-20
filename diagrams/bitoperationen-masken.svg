@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820">
-  <style>@import url("diagram-theme.css");
-    .op { font-family: "MCT JetBrains Mono", "JetBrains Mono", monospace; font-size: 30px; font-weight: 700; }
-    .bits { font-family: "MCT JetBrains Mono", "JetBrains Mono", monospace; font-size: 30px; font-weight: 600; letter-spacing: 2px; }
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="1200" height="820" viewBox="0 0 1200 820" version="1.1" id="svg31" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs id="defs31" />
+  <style id="style1">@import url(&quot;diagram-theme.css&quot;);
+    .op { font-family: &quot;MCT JetBrains Mono&quot;, &quot;JetBrains Mono&quot;, monospace; font-size: 30px; font-weight: 700; }
+    .bits { font-family: &quot;MCT JetBrains Mono&quot;, &quot;JetBrains Mono&quot;, monospace; font-size: 30px; font-weight: 600; letter-spacing: 2px; }
     .caption { font-size: 17px; }
     .mask-and { fill: #dbeafe; }
     .mask-or { fill: #fee2e2; }
@@ -10,73 +11,62 @@
     .result { fill: #eaf7ea; stroke: #79b879; stroke-width: 1.5px; rx: 8px; ry: 8px; }
     .rule { stroke: #8c959f; stroke-width: 2px; }
   </style>
-  <title>Bitoperationen mit Masken</title>
-  <desc>Beispiele für bitweises UND, ODER und XOR. UND kann Bits ausschalten, ODER einschalten und XOR umschalten.</desc>
-
-  <text x="40" y="48" class="title">Bitoperationen mit Masken</text>
-
+  <title id="title1">Bitoperationen mit Masken</title>
+  <desc id="desc1">Beispiele für bitweises UND, ODER und XOR. UND kann Bits ausschalten, ODER einschalten und XOR umschalten.</desc>
+  <text x="40" y="48" class="title" id="text1">Bitoperationen mit Masken</text>
   <!-- AND -->
-  <g transform="translate(35,80)">
-    <rect x="0" y="0" width="1130" height="220" class="panel"/>
-    <text x="25" y="42" class="section-title">UND: <tspan class="mono">&amp;</tspan></text>
-    <text x="25" y="76" class="label">Mit <tspan class="mono">&amp;</tspan> können Bits gezielt ausgeschaltet werden.</text>
-
-    <text x="235" y="118" text-anchor="end" class="label-strong">Wert</text>
-    <text x="270" y="118" class="bits">1011 0110</text>
-
-    <text x="235" y="158" text-anchor="end" class="label-strong">Maske</text>
-    <rect x="263" y="128" width="267" height="39" class="mask-and" rx="7" ry="7"/>
-    <text x="270" y="158" class="bits">1111 0000</text>
-    <text x="555" y="158" class="op">&amp;</text>
-
-    <line x1="265" y1="173" x2="532" y2="173" class="rule"/>
-    <rect x="263" y="177" width="267" height="7" fill="transparent"/>
-    <text x="650" y="138" class="caption">0 in der Maske → Ergebnisbit wird 0</text>
-    <text x="650" y="165" class="caption">1 in der Maske → ursprüngliches Bit bleibt erhalten</text>
-
-    <rect x="263" y="174" width="267" height="0" class="result"/>
-    <text x="270" y="208" class="bits">1011 0000</text>
+  <g transform="translate(35,80)" id="g11">
+    <rect x="0" y="0" width="1130" height="220" class="panel" id="rect1" />
+    <text x="25" y="42" class="section-title" id="text2">UND: <tspan class="mono" id="tspan1">&amp;</tspan></text>
+    <text x="25" y="76" class="label" id="text3">Mit <tspan class="mono" id="tspan2">&amp;</tspan> können Bits gezielt ausgeschaltet werden.</text>
+    <text x="235" y="118" text-anchor="end" class="label-strong" id="text4">Wert</text>
+    <text x="270" y="118" class="bits" id="text5">1011 0110</text>
+    <text x="235" y="158" text-anchor="end" class="label-strong" id="text6">Maske</text>
+    <rect x="263" y="128" width="267" height="39" class="mask-and" rx="7" ry="7" id="rect6" />
+    <text x="270" y="158" class="bits" id="text7">1111 0000</text>
+    <text x="555" y="158" class="op" id="text8">&amp;</text>
+    <line x1="265" y1="173" x2="532" y2="173" class="rule" id="line8" />
+    <text x="650" y="138" class="caption" id="text9">0 in der Maske → Ergebnisbit wird 0</text>
+    <text x="650" y="165" class="caption" id="text10">1 in der Maske → ursprüngliches Bit bleibt erhalten</text>
+    <text x="270" y="208" class="bits" id="text11">1011 0000</text>
   </g>
-
   <!-- OR -->
-  <g transform="translate(35,320)">
-    <rect x="0" y="0" width="1130" height="220" class="panel"/>
-    <text x="25" y="42" class="section-title">ODER: <tspan class="mono">|</tspan></text>
-    <text x="25" y="76" class="label">Mit <tspan class="mono">|</tspan> können Bits gezielt eingeschaltet werden.</text>
-
-    <text x="235" y="118" text-anchor="end" class="label-strong">Wert</text>
-    <text x="270" y="118" class="bits">1011 0010</text>
-
-    <text x="235" y="158" text-anchor="end" class="label-strong">Maske</text>
-    <rect x="263" y="128" width="267" height="39" class="mask-or" rx="7" ry="7"/>
-    <text x="270" y="158" class="bits">0000 1101</text>
-    <text x="555" y="158" class="op">|</text>
-
-    <line x1="265" y1="173" x2="532" y2="173" class="rule"/>
-    <text x="650" y="138" class="caption">1 in der Maske → Ergebnisbit wird 1</text>
-    <text x="650" y="165" class="caption">0 in der Maske → ursprüngliches Bit bleibt erhalten</text>
-
-    <text x="270" y="208" class="bits">1011 1111</text>
+  <g transform="translate(35,320)" id="g21">
+    <rect x="0" y="0" width="1130" height="220" class="panel" id="rect11" />
+    <text x="25" y="42" class="section-title" id="text12">ODER: <tspan class="mono" id="tspan11">|</tspan></text>
+    <text x="25" y="76" class="label" id="text13">Mit <tspan class="mono" id="tspan12">|</tspan> können Bits gezielt eingeschaltet werden.</text>
+    <text x="235" y="118" text-anchor="end" class="label-strong" id="text14">Wert</text>
+    <text x="270" y="118" class="bits" id="text15">1011 0110</text>
+    <text x="235" y="158" text-anchor="end" class="label-strong" id="text16">Maske</text>
+    <rect x="263" y="128" width="267" height="39" class="mask-or" rx="7" ry="7" id="rect16" />
+    <text x="270" y="158" class="bits" id="text17">1111 0000</text>
+    <text x="555" y="158" class="op" id="text18">|</text>
+    <line x1="265" y1="173" x2="532" y2="173" class="rule" id="line18" />
+    <text x="650" y="138" class="caption" id="text19">1 in der Maske → Ergebnisbit wird 1</text>
+    <text x="650" y="165" class="caption" id="text20">0 in der Maske → ursprüngliches Bit bleibt erhalten</text>
+    <text x="270" y="208" class="bits" id="text21">1111 0110</text>
   </g>
-
   <!-- XOR -->
-  <g transform="translate(35,560)">
-    <rect x="0" y="0" width="1130" height="220" class="panel"/>
-    <text x="25" y="42" class="section-title">XOR: <tspan class="mono">^</tspan></text>
-    <text x="25" y="76" class="label">Mit <tspan class="mono">^</tspan> können Bits gezielt umgeschaltet (getoggelt) werden.</text>
-
-    <text x="235" y="118" text-anchor="end" class="label-strong">Wert</text>
-    <text x="270" y="118" class="bits">1011 0010</text>
-
-    <text x="235" y="158" text-anchor="end" class="label-strong">Maske</text>
-    <rect x="263" y="128" width="267" height="39" class="mask-xor" rx="7" ry="7"/>
-    <text x="270" y="158" class="bits">1111 0000</text>
-    <text x="555" y="158" class="op">^</text>
-
-    <line x1="265" y1="173" x2="532" y2="173" class="rule"/>
-    <text x="650" y="138" class="caption">1 in der Maske → 0 wird 1 und 1 wird 0</text>
-    <text x="650" y="165" class="caption">0 in der Maske → ursprüngliches Bit bleibt erhalten</text>
-
-    <text x="270" y="208" class="bits">0100 0010</text>
+  <g transform="translate(35,560)" id="g31">
+    <rect x="0" y="0" width="1130" height="220" class="panel" id="rect21" />
+    <text x="25" y="42" class="section-title" id="text22">XOR: <tspan class="mono" id="tspan21">^</tspan></text>
+    <text x="25" y="76" class="label" id="text23">Mit <tspan class="mono" id="tspan22">^</tspan> können Bits gezielt umgeschaltet (getoggelt) werden.</text>
+    <text x="235" y="118" text-anchor="end" class="label-strong" id="text24">Wert</text>
+    <text x="270" y="118" class="bits" id="text25">1011 0110</text>
+    <text x="235" y="158" text-anchor="end" class="label-strong" id="text26">Maske</text>
+    <rect x="263" y="128" width="267" height="39" class="mask-xor" rx="7" ry="7" id="rect26" />
+    <text x="270" y="158" class="bits" id="text27">1111 0000</text>
+    <text x="555" y="158" class="op" id="text28">^</text>
+    <line x1="265" y1="173" x2="532" y2="173" class="rule" id="line28" />
+    <text x="650" y="138" class="caption" id="text29">1 in der Maske → 0 wird 1 und 1 wird 0</text>
+    <text x="650" y="165" class="caption" id="text30">0 in der Maske → ursprüngliches Bit bleibt erhalten</text>
+    <text x="270" y="208" class="bits" id="text31">0100 0110</text>
   </g>
+  <metadata id="metadata1">
+    <rdf:RDF>
+      <cc:Work rdf:about="">
+        <dc:title>Bitoperationen mit Masken</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
 </svg>
