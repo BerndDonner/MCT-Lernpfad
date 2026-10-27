@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "context-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1792956882,
+        "narHash": "sha256-GHrkSjndD0cnaaCxqZdvKdRkJBS4XEoRebqWWjOFhno=",
+        "owner": "contextgarden",
+        "repo": "context",
+        "rev": "5751e39641a5acae5ce3eb579386394a1ed5da07",
+        "type": "github"
+      },
+      "original": {
+        "owner": "contextgarden",
+        "repo": "context",
+        "type": "github"
+      }
+    },
     "disko": {
       "inputs": {
         "nixpkgs": [
@@ -105,20 +121,22 @@
     },
     "nixos-config": {
       "inputs": {
+        "context-src": "context-src",
         "disko": "disko",
         "helix": "helix",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "scope-rs-src": "scope-rs-src",
-        "steel": "steel"
+        "steel": "steel",
+        "tio-src": "tio-src"
       },
       "locked": {
-        "lastModified": 1792490836,
-        "narHash": "sha256-B6vk4jaHspdVGSkSJ39tb4/LUaaiudvccZVv8yp5YYg=",
+        "lastModified": 1793096830,
+        "narHash": "sha256-lQ4m71kqpQIYxiy1n4Q1fpTOvuSuJffu/fHgG0/k2LY=",
         "owner": "BerndDonner",
         "repo": "NixOS-Config",
-        "rev": "7af39cabebe03877910212d1fed18fd72713a354",
+        "rev": "18e0175ae8f3016f909ad4d29543123c470e22ee",
         "type": "github"
       },
       "original": {
@@ -244,6 +262,23 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "tio-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791592274,
+        "narHash": "sha256-MzrxQ+Clk6xsE4tw+F0XZy8W9ZGq2g3EYIuI6pN/vgs=",
+        "owner": "yabu76",
+        "repo": "tio",
+        "rev": "fa4e449318fc07f8b78671b6531f7719cdb52e0d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "yabu76",
+        "ref": "master_this_fork",
+        "repo": "tio",
         "type": "github"
       }
     },

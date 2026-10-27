@@ -108,6 +108,10 @@
             inherit pkgs;
             symbol = "";
             compiler = pkgs.gcc;
+            inputs = { inherit nixos-config; };
+            flakeLockPath = ./flake.lock;
+            buildSystems = [ "meson" "ninja" ];
+            utilityTools = [ "git" ];
 
             extraBuildInputs = with pkgs; [
               gtk4
