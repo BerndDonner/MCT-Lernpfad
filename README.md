@@ -262,3 +262,10 @@ bleibt gleich groß. Die Zoomstufen reichen von 75 % bis 300 %.
 
 Der Zoom bleibt beim Wechsel zwischen Unterrichtseinheiten erhalten.
 Er betrifft nur die Anzeige, nicht die Markdown- oder SVG-Dateien.
+
+## Anderes Theme für Viewer testen
+
+```bash
+GTK_THEME=Adwaita:dark nix run
+GTK_THEME=Adwaita nix run
+```
