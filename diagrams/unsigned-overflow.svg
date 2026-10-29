@@ -2,9 +2,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="330" viewBox="0 0 1200 330">
   <style>@import url("diagram-theme.css");
     .hex { font-family: "MCT JetBrains Mono", "JetBrains Mono", monospace; font-size: 27px; font-weight: 650; }
-    .dec { font-family: "MCT JetBrains Mono", "JetBrains Mono", monospace; font-size: 16px; fill: #656d76; }
-    .node { fill: #ffffff; stroke: #8c959f; stroke-width: 2px; rx: 10px; ry: 10px; }
-    .wrap { fill: #fff8c5; stroke: #d4a72c; stroke-width: 2.5px; rx: 10px; ry: 10px; }
+    .dec { font-family: "MCT JetBrains Mono", "JetBrains Mono", monospace; font-size: 16px; fill: var(--diagram-muted); }
+    .node { fill: var(--diagram-card); stroke: var(--diagram-border); stroke-width: 2px; rx: 10px; ry: 10px; }
+    .wrap { fill: var(--diagram-wrap-bg); stroke: var(--diagram-wrap-border); stroke-width: 2.5px; rx: 10px; ry: 10px; }
   </style>
   <title>Überlauf eines 8-Bit-Zählers</title>
   <desc>Ein uint8_t läuft nach 255 wieder bei 0 weiter. Der Abstand über den Überlauf kann modulo 256 bestimmt werden.</desc>

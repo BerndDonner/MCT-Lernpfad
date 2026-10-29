@@ -3,7 +3,6 @@
   <title id="svg-title">Bit Shift nach links – interaktives uint8_t-Beispiel</title>
   <desc id="svg-desc">Bits einer vorzeichenlosen 8-Bit-Zahl durch Klicken ändern. Shift-Wert durch Klick erhöhen und durch Shift-Klick verringern. Herausfallende Bits sind rot und durchgestrichen, erhaltene Bits schwarz und neue Nullen grün. Code und Dezimalrechnung werden synchron aktualisiert.</desc>
   <style>@import url("diagram-theme.css");
-:root { color-scheme: light; }
 svg { font-family: "MCT Inter", Inter, system-ui, sans-serif; }
 .title { font-family: "MCT Inter", Inter, system-ui, sans-serif; font-size: 26px; font-weight: 700; }
 .help { font-size: 17px; }

@@ -10,29 +10,29 @@
 
   <style>
     @import url("diagram-theme.css");
-    .subtitle { font-size: 16px; fill: #656d76; }
-    .commit-line { stroke: #8c959f; stroke-width: 4; fill: none; }
+    .subtitle { font-size: 16px; fill: var(--diagram-muted); }
+    .commit-line { stroke: var(--diagram-border); stroke-width: 4; fill: none; }
     .commit { cursor: pointer; }
-    .commit circle { fill: #ffffff; stroke: #1f2328; stroke-width: 3; }
+    .commit circle { fill: var(--diagram-card); stroke: var(--diagram-fg); stroke-width: 3; }
     .commit text { font-size: 18px; font-weight: 700; pointer-events: none; }
-    .commit.primary circle { stroke: #1f6feb; stroke-width: 6; }
-    .commit.secondary circle { stroke: #8250df; stroke-width: 6; }
+    .commit.primary circle { stroke: var(--diagram-primary); stroke-width: 6; }
+    .commit.secondary circle { stroke: var(--diagram-secondary); stroke-width: 6; }
     .branch-label { font-size: 17px; font-weight: 700; }
-    .panel-rule { stroke: #d0d7de; stroke-width: 1.5; }
-    .tree-folder { fill: #57606a; font-weight: 700; }
-    .tree-file { fill: #1f2328; }
-    .tree-file-added { fill: #1a7f37; font-weight: 700; }
-    .tree-file-modified { fill: #9a6700; font-weight: 700; }
-    .status-added { fill: #1a7f37; font-weight: 700; }
-    .status-modified { fill: #9a6700; font-weight: 700; }
-    .status-deleted { fill: #cf222e; font-weight: 700; }
-    .legend-box { fill: #ffffff; stroke: #d0d7de; stroke-width: 1.5; }
-    .legend-swatch-added { fill: #1a7f37; }
-    .legend-swatch-modified { fill: #9a6700; }
-    .legend-swatch-deleted { fill: #cf222e; }
+    .panel-rule { stroke: var(--diagram-soft-border); stroke-width: 1.5; }
+    .tree-folder { fill: var(--diagram-muted); font-weight: 700; }
+    .tree-file { fill: var(--diagram-fg); }
+    .tree-file-added { fill: var(--diagram-positive); font-weight: 700; }
+    .tree-file-modified { fill: var(--diagram-shift); font-weight: 700; }
+    .status-added { fill: var(--diagram-positive); font-weight: 700; }
+    .status-modified { fill: var(--diagram-shift); font-weight: 700; }
+    .status-deleted { fill: var(--diagram-negative); font-weight: 700; }
+    .legend-box { fill: var(--diagram-card); stroke: var(--diagram-soft-border); stroke-width: 1.5; }
+    .legend-swatch-added { fill: var(--diagram-positive); }
+    .legend-swatch-modified { fill: var(--diagram-shift); }
+    .legend-swatch-deleted { fill: var(--diagram-negative); }
   </style>
 
-  <rect width="1280" height="760" fill="#ffffff"/>
+  <rect width="1280" height="760" class="diagram-bg"/>
 
   <text x="42" y="44" class="title">Git: Commit-Snapshot und Dateidiff</text>
   <text x="42" y="70" class="subtitle">Linksklick: Snapshot · Shift+Linksklick: zweiten Commit für Diff auswählen</text>

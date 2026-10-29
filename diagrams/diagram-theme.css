@@ -14,13 +14,84 @@
   font-display: block;
 }
 
+/* Standalone SVGs: transparent auf dem umgebenden Hintergrund.
+   Die eingebettete SVG erbt ggf. das color-scheme ihres <img>/<object>-Hosts,
+   nicht aber dessen CSS-Variablen oder die tatsächliche Hintergrundfarbe.
+   Im Lernpfad-Viewer überschreibt eine separate, berechnete Palette diese
+   Fallback-Werte (siehe viewer-theme.js). */
+:root {
+  /* Keine eigene color-scheme-Deklaration: Als <object> erzeugt Chromium
+     sonst eine deckende dunkle SVG-Zeichenfläche. */
+  --diagram-fg: #1f2328;
+  --diagram-muted: #57606a;
+  --diagram-line: #222222;
+  --diagram-border: #8c959f;
+  --diagram-soft-border: #d0d7de;
+  --diagram-guide: #d8dee4;
+  --diagram-card: #ffffff;
+  --diagram-surface: #f6f8fa;
+  --diagram-primary: #1f6feb;
+  --diagram-positive: #1a7f37;
+  --diagram-negative: #cf222e;
+  --diagram-shift: #9a6700;
+  --diagram-secondary: #8250df;
+  --diagram-result-bg: #eaf7ea;
+  --diagram-result-border: #79b879;
+  --diagram-hover-bit: #dbeafe;
+  --diagram-hover-bit-border: #80b3ff;
+  --diagram-hover-shift: #ffe6b3;
+  --diagram-hover-shift-border: #bd7600;
+  --diagram-mask-and: #dbeafe;
+  --diagram-mask-or: #fee2e2;
+  --diagram-mask-xor: #fef3c7;
+  --diagram-wrap-bg: #fff8c5;
+  --diagram-wrap-border: #d4a72c;
+  --diagram-token-type: #0550ae;
+  --diagram-token-num: #0a7f70;
+  --diagram-token-char: #953800;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --diagram-fg: #e6edf3;
+    --diagram-muted: #adb8c4;
+    --diagram-line: #d7dfe8;
+    --diagram-border: #9da8b3;
+    --diagram-soft-border: #66788b;
+    --diagram-guide: #60738a;
+    /* Halbtransparente Flächen statt eines weißen Rechtecks:
+       der tatsächliche Hintergrund (auch Dunkelblau) bleibt sichtbar. */
+    --diagram-card: rgba(255, 255, 255, .045);
+    --diagram-surface: rgba(255, 255, 255, .075);
+    --diagram-primary: #79c0ff;
+    --diagram-positive: #7ee787;
+    --diagram-negative: #ff8f88;
+    --diagram-shift: #f2cc60;
+    --diagram-secondary: #d2a8ff;
+    --diagram-result-bg: rgba(56, 194, 103, .16);
+    --diagram-result-border: #70ce8c;
+    --diagram-hover-bit: rgba(121, 192, 255, .17);
+    --diagram-hover-bit-border: #79c0ff;
+    --diagram-hover-shift: rgba(242, 204, 96, .2);
+    --diagram-hover-shift-border: #f2cc60;
+    --diagram-mask-and: rgba(121, 192, 255, .17);
+    --diagram-mask-or: rgba(255, 143, 136, .17);
+    --diagram-mask-xor: rgba(242, 204, 96, .2);
+    --diagram-wrap-bg: rgba(242, 204, 96, .18);
+    --diagram-wrap-border: #f2cc60;
+    --diagram-token-type: #79c0ff;
+    --diagram-token-num: #56d4c9;
+    --diagram-token-char: #ffa657;
+  }
+}
+
 svg {
-  color: #1f2328;
+  color: var(--diagram-fg);
   font-family: "MCT Inter", Inter, system-ui, sans-serif;
 }
 
 text {
-  fill: #1f2328;
+  fill: var(--diagram-fg);
   font-family: "MCT Inter", Inter, system-ui, sans-serif;
 }
 
@@ -64,16 +135,16 @@ text {
 }
 
 .box {
-  fill: #ffffff;
-  stroke: #222222;
+  fill: var(--diagram-card);
+  stroke: var(--diagram-line);
   stroke-width: 2.5px;
   rx: 10px;
   ry: 10px;
 }
 
 .panel {
-  fill: #f6f8fa;
-  stroke: #d0d7de;
+  fill: var(--diagram-surface);
+  stroke: var(--diagram-soft-border);
   stroke-width: 2px;
   rx: 14px;
   ry: 14px;
@@ -81,28 +152,28 @@ text {
 
 .arrow-standard {
   fill: none;
-  stroke: #222222;
+  stroke: var(--diagram-line);
   stroke-width: 2.5px;
 }
 
 .arrow-primary {
   fill: none;
-  stroke: #1f6feb;
+  stroke: var(--diagram-primary);
   stroke-width: 4px;
 }
 
 .arrow-muted {
   fill: none;
-  stroke: #222222;
+  stroke: var(--diagram-line);
   stroke-width: 2.2px;
 }
 
-.marker-standard { fill: #222222; }
-.marker-primary { fill: #1f6feb; }
+.marker-standard { fill: var(--diagram-line); }
+.marker-primary { fill: var(--diagram-primary); }
 
 .guide {
   fill: none;
-  stroke: #d8dee4;
+  stroke: var(--diagram-guide);
   stroke-width: 1px;
 }
 
@@ -115,27 +186,26 @@ text {
 }
 
 .table-row {
-  fill: #f6f8fa;
+  fill: var(--diagram-surface);
 }
 
 .table-row-alt {
-  fill: #ffffff;
+  fill: var(--diagram-card);
 }
 
-/* Gemeinsame Farben für Bitoperationen und interaktive Diagramme.
-   Farbwerte stehen bewusst hier statt in den SVGs (auch für SVG-Exporter). */
-.diagram-bg { fill: #ffffff; }
-.diagram-surface { fill: #f6f8fa; stroke: #d0d7de; stroke-width: 1.5px; }
-.diagram-surface-white { fill: #ffffff; stroke: #d0d7de; stroke-width: 1.5px; }
-.diagram-muted { fill: #57606a; }
-.diagram-a { fill: #1f6feb; }
-.diagram-shift { fill: #9a6700; }
-.diagram-bit-old { fill: #1f2328; }
-.diagram-bit-new { fill: #1a7f37; }
-.diagram-bit-lost { fill: #cf222e; }
-.diagram-strike { stroke: #cf222e; stroke-width: 2.8; stroke-linecap: round; }
-.diagram-result-highlight { fill: #eaf7ea; stroke: #79b879; stroke-width: 1.5px; }
-.diagram-result-text { fill: #1f2328; }
+/* Gemeinsame Farbrollen für Bitoperationen und interaktive Diagramme. */
+.diagram-bg { fill: none; }
+.diagram-surface { fill: var(--diagram-surface); stroke: var(--diagram-soft-border); stroke-width: 1.5px; }
+.diagram-surface-white { fill: var(--diagram-card); stroke: var(--diagram-soft-border); stroke-width: 1.5px; }
+.diagram-muted { fill: var(--diagram-muted); }
+.diagram-a { fill: var(--diagram-primary); }
+.diagram-shift { fill: var(--diagram-shift); }
+.diagram-bit-old { fill: var(--diagram-fg); }
+.diagram-bit-new { fill: var(--diagram-positive); }
+.diagram-bit-lost { fill: var(--diagram-negative); }
+.diagram-strike { stroke: var(--diagram-negative); stroke-width: 2.8; stroke-linecap: round; }
+.diagram-result-highlight { fill: var(--diagram-result-bg); stroke: var(--diagram-result-border); stroke-width: 1.5px; }
+.diagram-result-text { fill: var(--diagram-fg); }
 
 /* Hervorhebung interaktiver Werte nur bei Hover oder Tastaturfokus. */
 .diagram-click-bit, .diagram-click-shift { cursor: pointer; outline: none; }
@@ -143,14 +213,14 @@ text {
   fill: transparent; stroke: transparent; stroke-width: 1.5px;
 }
 .diagram-click-bit:hover > rect, .diagram-click-bit:focus-visible > rect {
-  fill: #dbeafe; stroke: #80b3ff;
+  fill: var(--diagram-hover-bit); stroke: var(--diagram-hover-bit-border);
 }
 .diagram-click-shift:hover > rect, .diagram-click-shift:focus-visible > rect {
-  fill: #ffe6b3; stroke: #bd7600;
+  fill: var(--diagram-hover-shift); stroke: var(--diagram-hover-shift-border);
 }
 
 /* Maskenhintergründe aus bitoperationen-masken.svg. */
-.diagram-mask-and { fill: #dbeafe; }
-.diagram-mask-or { fill: #fee2e2; }
-.diagram-mask-xor { fill: #fef3c7; }
-.diagram-mask-rule { stroke: #8c959f; stroke-width: 2px; }
+.diagram-mask-and { fill: var(--diagram-mask-and); }
+.diagram-mask-or { fill: var(--diagram-mask-or); }
+.diagram-mask-xor { fill: var(--diagram-mask-xor); }
+.diagram-mask-rule { stroke: var(--diagram-border); stroke-width: 2px; }

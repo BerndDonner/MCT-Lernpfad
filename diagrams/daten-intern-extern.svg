@@ -2,12 +2,12 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="1200" height="360" viewBox="0 0 1200 360">
   <style>@import url("diagram-theme.css");
-    .tok-type { fill: #0550ae; }
-    .tok-ident { fill: #1f2328; }
-    .tok-op { fill: #6e7781; }
-    .tok-num { fill: #0a7f70; }
-    .tok-char { fill: #953800; }
-    .tok-punct { fill: #6e7781; }
+    .tok-type { fill: var(--diagram-token-type); }
+    .tok-ident { fill: var(--diagram-fg); }
+    .tok-op { fill: var(--diagram-muted); }
+    .tok-num { fill: var(--diagram-token-num); }
+    .tok-char { fill: var(--diagram-token-char); }
+    .tok-punct { fill: var(--diagram-muted); }
   </style>
 
   <title>Externe Darstellung und internes Bitmuster</title>

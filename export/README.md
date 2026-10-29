@@ -21,8 +21,9 @@ python export/export-diagrams.py
 ```
 
 Der Export bettet die referenzierten lokalen CSS-Dateien ein, entfernt
-`@font-face`-Deklarationen mit externen Font-Dateien und ergänzt einen weißen
-Hintergrund für die VS-Code-Dark-Theme-Darstellung. SVGs mit nicht sicher
+`@font-face`-Deklarationen mit externen Font-Dateien und erhält die
+transparenten Flächen sowie die hell/dunkel adaptiven CSS-Farbrollen für
+die VS-Code-Markdown-Vorschau. SVGs mit nicht sicher
 auflösbaren externen Abhängigkeiten werden als Fehler gemeldet. Scheitert die
 Validierung einer statischen SVG, wird **keine** Ausgabedatei aktualisiert.
 

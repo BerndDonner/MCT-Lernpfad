@@ -23,7 +23,7 @@ class ExportTests(unittest.TestCase):
     def setUpClass(cls):
         cls.exporter = load("export_diagrams", "export-diagrams.py")
 
-    def test_static_sources_have_white_background_and_embedded_css(self):
+    def test_static_sources_keep_transparency_and_embedded_css(self):
         diagrams = REPO / "diagrams"
         exported = []
         skipped = []
@@ -33,7 +33,11 @@ class ExportTests(unittest.TestCase):
                 skipped.append(svg.name)
             else:
                 exported.append(svg.name)
-                self.assertIn(b"fill: #ffffff; stroke: none", data)
+                self.assertIn(b"prefers-color-scheme: dark", data)
+                self.assertNotIn(b"fill: #ffffff; stroke: none", data)
+                self.assertIn(b"--diagram-fg", data)
+                self.assertIn(b".diagram-bg { fill: none; }", data)
+                self.assertNotIn(b"color-scheme: light dark;", data)
                 self.assertNotIn(b"@import", data)
                 self.assertNotIn(b"@font-face", data)
                 self.assertNotIn(b"<script", data)

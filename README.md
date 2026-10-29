@@ -117,9 +117,11 @@ von VS Code angezeigt werden (keine Viewer-Erweiterung nötig).
 - `<object data="...svg">` wird in gewöhnliche Markdown-Bilder umgewandelt.
 - SVG-Stylesheets (`@import url("diagram-theme.css")`) werden eingebettet;
   externe Fonts werden nicht mitkopiert, stattdessen werden Schrift-Fallbacks
-  verwendet. SVGs bleiben skalierbar. Für dunkle Markdown-Vorschauen erhält
-  jedes exportierte SVG einen deckend weißen Hintergrund; die Original-SVGs
-  und ihre Darstellung im Viewer bleiben unverändert.
+  verwendet. SVGs bleiben skalierbar und transparent. Ihre eingebettete
+  Farbpalette passt sich an das von der Bild-Einbettung angebotene helle oder
+  dunkle Farbschema an. Beliebige eigene VS-Code-Hintergrundfarben sind beim
+  externen SVG-Bild nicht auslesbar; ein dunkelblaues Theme profitiert von
+  kontrastreichen Farben und halbtransparenten Diagrammflächen.
 - Bei interaktiven SVGs wird der **momentan angezeigte Zustand** als statisches
   SVG gespeichert. Skripte werden entfernt. Kann der Host nicht auf das
   tatsächlich dargestellte SVG zugreifen, schlägt der Export mit einer
@@ -157,6 +159,29 @@ Die Diagramme werden grundsätzlich als `<object>` eingebettet:
 Der Viewer löst relative Bild-, Object- und Iframe-URLs gegen das Verzeichnis
 der geöffneten Markdown-Datei auf. Dadurch funktionieren dieselben Dokumente
 im Browser und im nativen Linux-Viewer.
+
+## Farben und transparente SVGs
+
+`viewer.css` bleibt für die Markdown-Anwendung zuständig,
+`diagrams/diagram-theme.css` definiert die Farbrollen der selbstständigen SVGs.
+Eine Zusammenfassung würde die SVGs unnötig an den Viewer koppeln.
+
+- **Im Viewer** liest `viewer-theme.js` die tatsächlich berechnete `body`-
+  Hintergrundfarbe und erzeugt kontrastreiche Farben, auch bei einem frei
+  konfigurierten blauen Hintergrund. Die Variablen werden nur temporär in die
+  per `<object>` geladenen SVGs eingefügt. Der UE-Exporter entfernt diese
+  Viewer-spezifischen Regeln aus dem Snapshot.
+- **Als normales Markdown-Bild** erhält ein SVG keine CSS-Variablen seines
+  umgebenden Editors. Seine eingebettete Stylesheet-Palette reagiert daher
+  auf das vom Host übergebene helle/dunkle `color-scheme` und verwendet
+  transparente Flächen. Eine pixelgenaue Anpassung an beliebige Editor-Farben
+  wäre bei externen Bildern ohne Zusammenarbeit mit dem Host nicht möglich.
+- **Batch-Export** und **UE-Export** betten die CSS-Definitionen ein, ohne
+  weiße Hintergrundflächen zu ergänzen. Die Grafikfarben bleiben unabhängig
+  davon, mit welchem Theme der Export ausgelöst wurde.
+
+Für den visuellen Abnahmetest sind mindestens ein heller, ein dunkler und ein
+blauer Hintergrund relevant (Chromium sowie WebKitGTK/VS-Code-Preview).
 
 ## Diagramm-Fonts
 

@@ -105,12 +105,7 @@ def convert(source: Path) -> tuple[bytes | None, str]:
             embed_css(node, source)
     validate_links(root, source.name)
 
-    # In die erste Zeichenebene einfügen; inline style schlägt CSS für rect.
-    background = ET.Element(f"{{{SVG_NS}}}rect", {
-        "x": viewbox[0], "y": viewbox[1], "width": viewbox[2], "height": viewbox[3],
-        "style": "fill: #ffffff; stroke: none",
-    })
-    root.insert(0, background)
+    # Transparenz und @media-Farbvarianten bleiben unverändert erhalten.
     return ET.tostring(root, encoding="utf-8", xml_declaration=True), "exportiert"
 
 

@@ -29,6 +29,11 @@
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer-base" />
+  <style>@import url("diagram-theme.css");
+    .git-node { fill: var(--diagram-card); stroke: var(--diagram-line); }
+    .git-arrow { stroke: var(--diagram-line); }
+    .git-arrow-marker { fill: var(--diagram-line); }
+  </style>
   <defs
      id="defs1">
     <rect
@@ -47,7 +52,7 @@
        orient="auto-start-reverse">
       <path
          d="M 0 0 L 10 5 L 0 10 z"
-         fill="#222"
+         class="git-arrow-marker"
          id="path1" />
     </marker>
   </defs>
@@ -88,8 +93,7 @@
          width="150"
          height="60"
          rx="8"
-         fill="#fff"
-         stroke="#222"
+         class="git-node"
          stroke-width="2.5" />
       <text
          id="master-label"
@@ -137,7 +141,7 @@
          y1="115"
          x2="655"
          y2="115"
-         stroke="#222"
+         class="git-arrow"
          stroke-width="2.5"
          marker-end="url(#arrow-end)" />
       <text
@@ -157,8 +161,7 @@
          width="150"
          height="60"
          rx="8"
-         fill="#fff"
-         stroke="#222"
+         class="git-node"
          stroke-width="2.5" />
       <text
          id="student-branch-label"
@@ -173,7 +176,7 @@
          y1="315"
          x2="315"
          y2="315"
-         stroke="#222"
+         class="git-arrow"
          stroke-width="2.5"
          marker-end="url(#arrow-end)" />
       <text
@@ -222,7 +225,7 @@
          y1="315"
          x2="655"
          y2="315"
-         stroke="#222"
+         class="git-arrow"
          stroke-width="2.5"
          marker-end="url(#arrow-end)" />
       <text
@@ -241,7 +244,7 @@
          y1="155"
          x2="105"
          y2="272"
-         stroke="#222"
+         class="git-arrow"
          stroke-width="2.5"
          stroke-dasharray="7 6"
          marker-end="url(#arrow-end)" />
@@ -260,7 +263,7 @@
          y1="160"
          x2="450"
          y2="267"
-         stroke="#222"
+         class="git-arrow"
          stroke-width="2.5"
          stroke-dasharray="7 6"
          marker-end="url(#arrow-end)" />
@@ -283,6 +286,6 @@
     <text
        xml:space="preserve"
        id="text11"
-       style="fill:#000000;text-orientation:auto;writing-mode:lr-tb;direction:ltr;font-size:16px;white-space:pre;shape-inside:url(#rect11)" />
+       style="fill:var(--diagram-fg);text-orientation:auto;writing-mode:lr-tb;direction:ltr;font-size:16px;white-space:pre;shape-inside:url(#rect11)" />
   </g>
 </svg>

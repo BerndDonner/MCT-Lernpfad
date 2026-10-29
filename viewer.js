@@ -786,6 +786,7 @@ function renderSelectedUE() {
     content.innerHTML = markdown.render(renderInfo.markdown, { ueRenderInfo: renderInfo });
     enhanceAlerts(content);
     resolveEmbeddedResources(content);
+    window.diagramTheme.refresh();
     scheduleUEGutter(content);
     updateNavigation();
     writeUEToUrl(selectedUE);
@@ -828,7 +829,10 @@ if ("ResizeObserver" in window) {
   ueGutterResizeObserver.observe(content);
 }
 window.addEventListener("resize", () => scheduleUEGutter(content));
-content.addEventListener("load", () => scheduleUEGutter(content), true);
+content.addEventListener("load", event => {
+  window.diagramTheme.adaptObject(event.target);
+  scheduleUEGutter(content);
+}, true);
 
 previousUEButton.addEventListener("click", () => selectUE(selectedUE - 1));
 nextUEButton.addEventListener("click", () => selectUE(selectedUE + 1));
